@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WPF Capital — Insights & Connect</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0A1628;--navy-mid:#122040;--gold:#C9A84C;--gold-light:#E2C97E;--cream:#F5F0E8;--off-white:#FAFAF8;--charcoal:#1C1C1E;--mid-gray:#6B6B6B;--light-gray:#D4D0C8;--sage:#8A9E8B}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--off-white);color:var(--charcoal);overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:24px 60px;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px)}
+.nav-logo{display:flex;flex-direction:column}
+.nav-logo-mark{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:3px;color:#fff;text-transform:uppercase}
+.nav-logo-sub{font-size:9px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-top:2px}
+.nav-links{display:flex;gap:40px;align-items:center}
+.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;transition:color 0.3s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{border:1px solid var(--gold)!important;color:var(--gold)!important;padding:10px 22px;font-size:11px!important;transition:all 0.3s!important}
+.nav-cta:hover{background:var(--gold)!important;color:var(--navy)!important}
+
+/* PAGE SWITCHER */
+.page-switcher{position:fixed;bottom:32px;right:32px;z-index:200;display:flex;gap:12px}
+.psw-btn{padding:12px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.3s;font-family:'Inter',sans-serif}
+.psw-btn.active{background:var(--gold);color:var(--navy)}
+.psw-btn:not(.active){background:var(--navy);color:rgba(255,255,255,0.6)}
+.psw-btn:hover:not(.active){background:var(--navy-mid);color:#fff}
+
+/* PAGE */
+.page{display:none}
+.page.active{display:block}
+
+/* SHARED */
+.page-hero{height:55vh;min-height:480px;background:var(--navy);display:flex;align-items:flex-end;padding:0 60px 80px;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;top:-20%;right:-5%;width:55vw;height:55vw;max-width:700px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.07) 0%,transparent 65%)}
+.page-hero-line{position:absolute;left:60px;top:0;bottom:0;width:1px;background:rgba(201,168,76,0.15)}
+.page-hero-content{z-index:2;padding-left:40px}
+.page-eyebrow{font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.page-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+.page-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,5.5vw,80px);font-weight:300;color:#fff;line-height:1.05}
+.page-h1 em{font-style:italic;color:var(--gold-light)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.5);margin-top:20px;max-width:520px;line-height:1.7;font-weight:300}
+.section{padding:100px 60px}
+.section-inner{max-width:1200px;margin:0 auto}
+.section-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.section-label::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+
+/* ============ INSIGHTS PAGE ============ */
+
+/* FILTER BAR */
+.filter-bar{background:var(--cream);padding:20px 60px;display:flex;gap:0;border-bottom:1px solid var(--light-gray)}
+.filter-btn{padding:12px 24px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mid-gray);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.3s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Inter',sans-serif}
+.filter-btn.active{color:var(--navy);border-color:var(--gold)}
+.filter-btn:hover{color:var(--navy)}
+
+/* FEATURED */
+.insights-featured{background:var(--navy);padding:80px 60px}
+.if-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:3fr 2fr;gap:60px;align-items:center}
+.if-tag{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.if-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,52px);font-weight:300;color:#fff;line-height:1.15;margin-bottom:20px}
+.if-h2 em{font-style:italic;color:var(--gold-light)}
+.if-excerpt{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.5);margin-bottom:32px}
+.if-meta{display:flex;align-items:center;gap:24px}
+.if-author{display:flex;align-items:center;gap:12px}
+.if-avatar{width:36px;height:36px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gold)}
+.if-author-name{font-size:13px;color:rgba(255,255,255,0.6)}
+.if-date{font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:1px}
+.if-read{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.3);padding-bottom:2px;cursor:pointer;transition:border-color 0.3s}
+.if-read:hover{border-color:var(--gold)}
+.if-image{background:rgba(255,255,255,0.04);height:320px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06)}
+.if-image-inner{font-family:'Cormorant Garamond',serif;font-size:80px;color:rgba(201,168,76,0.1);font-weight:300;font-style:italic}
+
+/* ARTICLES GRID */
+.articles-section{background:var(--off-white);padding:80px 60px}
+.arts-inner{max-width:1200px;margin:0 auto}
+.arts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:48px}
+.art-card{background:#fff;border:1px solid var(--light-gray);transition:all 0.4s;cursor:pointer;overflow:hidden}
+.art-card:hover{border-color:var(--gold);box-shadow:0 16px 48px rgba(0,0,0,0.08);transform:translateY(-4px)}
+.art-card-img{height:180px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:60px;color:rgba(201,168,76,0.1);position:relative}
+.art-card-img-label{position:absolute;bottom:16px;left:16px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:rgba(10,22,40,0.8);padding:4px 10px}
+.art-body{padding:28px}
+.art-tag{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.art-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--navy);margin-bottom:12px;line-height:1.3;font-weight:300}
+.art-excerpt{font-size:13px;line-height:1.7;color:var(--mid-gray);margin-bottom:20px}
+.art-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--light-gray);padding-top:16px}
+.art-author{font-size:11px;color:var(--mid-gray)}
+.art-date{font-size:11px;color:var(--light-gray);letter-spacing:1px}
+
+/* NEWSLETTER */
+.newsletter{background:var(--navy);padding:80px 60px}
+.nl-inner{max-width:700px;margin:0 auto;text-align:center}
+.nl-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.nl-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,48px);font-weight:300;color:#fff;margin-bottom:16px;line-height:1.2}
+.nl-h2 em{font-style:italic;color:var(--gold-light)}
+.nl-sub{font-size:14px;line-height:1.8;color:rgba(255,255,255,0.45);margin-bottom:40px}
+.nl-form{display:flex;gap:0;max-width:480px;margin:0 auto}
+.nl-form input{flex:1;padding:16px 20px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#fff;font-size:14px;outline:none;transition:border 0.3s;font-family:'Inter',sans-serif}
+.nl-form input::placeholder{color:rgba(255,255,255,0.3)}
+.nl-form input:focus{border-color:var(--gold)}
+.nl-form button{background:var(--gold);color:var(--navy);padding:16px 28px;border:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:all 0.3s;white-space:nowrap}
+.nl-form button:hover{background:var(--gold-light)}
+.nl-note{font-size:11px;color:rgba(255,255,255,0.2);margin-top:14px;letter-spacing:1px}
+
+/* ============ CONNECT PAGE ============ */
+.connect-layout{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 400px)}
+.connect-left{background:var(--navy);padding:80px 60px}
+.connect-right{background:var(--cream);padding:80px 60px}
+.cl-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:flex;align-items:center;gap:14px}
+.cl-label::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+.cl-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,48px);font-weight:300;color:#fff;line-height:1.2;margin-bottom:20px}
+.cl-h2 em{font-style:italic;color:var(--gold-light)}
+.cl-sub{font-size:14px;line-height:1.8;color:rgba(255,255,255,0.45);margin-bottom:48px}
+
+/* Offices */
+.offices{display:flex;flex-direction:column;gap:0;margin-bottom:48px}
+.office{padding:24px 0;border-bottom:1px solid rgba(255,255,255,0.08);display:grid;grid-template-columns:24px 1fr;gap:16px}
+.office-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);margin-top:6px}
+.office-name{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.office-addr{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6}
+
+.contact-links{display:flex;flex-direction:column;gap:16px}
+.contact-link{display:flex;align-items:center;gap:16px;text-decoration:none;transition:all 0.3s}
+.contact-link:hover .cl-text{color:var(--gold)}
+.cl-icon{width:40px;height:40px;border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;transition:all 0.3s}
+.contact-link:hover .cl-icon{border-color:var(--gold);background:rgba(201,168,76,0.05)}
+.cl-label2{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:2px}
+.cl-text{font-size:14px;color:rgba(255,255,255,0.7);transition:color 0.3s}
+
+/* FORM */
+.cr-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:14px}
+.cr-label::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+.cr-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3vw,40px);font-weight:300;color:var(--navy);line-height:1.2;margin-bottom:12px}
+.cr-sub{font-size:14px;line-height:1.8;color:var(--mid-gray);margin-bottom:36px}
+
+.form-field{margin-bottom:20px}
+.form-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--mid-gray);margin-bottom:8px;display:block}
+.form-input,.form-select,.form-textarea{width:100%;padding:14px 18px;border:1px solid var(--light-gray);background:#fff;font-size:14px;color:var(--charcoal);outline:none;transition:border 0.3s;font-family:'Inter',sans-serif;appearance:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold)}
+.form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23C9A84C' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.form-textarea{height:100px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.btn-submit{width:100%;background:var(--navy);color:#fff;padding:18px;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.3s;margin-top:8px}
+.btn-submit:hover{background:var(--gold);color:var(--navy)}
+.form-note{font-size:11px;color:var(--mid-gray);margin-top:14px;letter-spacing:0.5px;text-align:center;line-height:1.7}
+
+/* PARTNERS */
+.partners-section{background:var(--cream);padding:60px}
+.ps-inner{max-width:1200px;margin:0 auto;text-align:center}
+.ps-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--mid-gray);margin-bottom:40px}
+.ps-row{display:flex;gap:48px;align-items:center;justify-content:center;flex-wrap:wrap}
+.ps-name{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--navy);opacity:0.35;transition:opacity 0.3s;cursor:default;font-weight:600;letter-spacing:1px}
+.ps-name:hover{opacity:0.85}
+
+/* MAP PLACEHOLDER */
+.map-section{background:var(--navy);padding:60px}
+.map-inner{max-width:1200px;margin:0 auto}
+.map-h2{font-family:'Cormorant Garamond',serif;font-size:32px;color:#fff;font-weight:300;margin-bottom:40px}
+.map-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.map-card{background:rgba(255,255,255,0.04);padding:40px;transition:background 0.3s}
+.map-card:hover{background:rgba(201,168,76,0.06)}
+.mc-city{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.mc-name{font-family:'Cormorant Garamond',serif;font-size:22px;color:#fff;margin-bottom:16px;font-weight:300}
+.mc-addr{font-size:13px;line-height:1.7;color:rgba(255,255,255,0.4)}
+.mc-link{display:inline-block;margin-top:16px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.3);padding-bottom:2px;transition:border-color 0.3s}
+.mc-link:hover{border-color:var(--gold)}
+
+footer{background:var(--navy);color:rgba(255,255,255,0.5);padding:80px 60px 40px;border-top:1px solid rgba(255,255,255,0.06)}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:60px}
+.footer-brand-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;letter-spacing:3px;font-weight:600;margin-bottom:4px}
+.footer-brand-sub{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
+.footer-about{font-size:13px;line-height:1.7;max-width:280px}
+.footer-col-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.footer-col a,.footer-col p{display:block;font-size:13px;color:rgba(255,255,255,0.45);text-decoration:none;margin-bottom:10px;transition:color 0.3s;line-height:1.6}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:32px;display:flex;justify-content:space-between;align-items:center}
+.footer-legal{font-size:11px}
+.footer-sebi{font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px}
+
+/* ARTICLE MODAL */
+.article-modal{display:none;position:fixed;inset:0;z-index:300;background:rgba(10,22,40,0.9);backdrop-filter:blur(8px);overflow-y:auto;padding:40px}
+.article-modal.open{display:flex;align-items:flex-start;justify-content:center}
+.am-inner{background:var(--off-white);max-width:800px;width:100%;margin:auto;padding:64px;position:relative}
+.am-close{position:absolute;top:24px;right:24px;width:40px;height:40px;background:none;border:1px solid var(--light-gray);cursor:pointer;font-size:18px;color:var(--mid-gray);transition:all 0.3s;display:flex;align-items:center;justify-content:center}
+.am-close:hover{border-color:var(--gold);color:var(--navy)}
+.am-tag{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.am-title{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;color:var(--navy);margin-bottom:20px;line-height:1.15}
+.am-meta{display:flex;gap:24px;align-items:center;padding:20px 0;border-top:1px solid var(--light-gray);border-bottom:1px solid var(--light-gray);margin-bottom:36px}
+.am-author{font-size:13px;color:var(--mid-gray)}
+.am-author strong{color:var(--navy)}
+.am-date{font-size:11px;color:var(--light-gray);letter-spacing:1px}
+.am-body{font-size:15px;line-height:1.9;color:var(--mid-gray)}
+.am-body p{margin-bottom:20px}
+.am-body h3{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--navy);font-weight:300;margin:36px 0 16px}
+.am-pull{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--navy);border-left:2px solid var(--gold);padding-left:24px;margin:32px 0;line-height:1.5}
+
+.fade-up{opacity:0;transform:translateY(24px);transition:opacity 0.6s,transform 0.6s}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">WPF Capital</div>
+    <div class="nav-logo-sub">Private Wealth & Advisory</div>
+  </div>
+  <div class="nav-links">
+    <a href="#">Philosophy</a>
+    <a href="#">Services</a>
+    <a href="#">Expertise</a>
+    <a href="#" id="nav-insights" class="active">Insights</a>
+    <a href="#" class="nav-cta" id="nav-connect-link">Connect</a>
+  </div>
+</nav>
+
+<!-- PAGE SWITCHER -->
+<div class="page-switcher">
+  <button class="psw-btn active" id="sw-insights">Insights</button>
+  <button class="psw-btn" id="sw-connect">Connect</button>
+</div>
+
+<!-- =============== INSIGHTS PAGE =============== -->
+<div class="page active" id="page-insights">
+  <section class="page-hero">
+    <div class="page-hero-line"></div>
+    <div class="page-hero-content">
+      <div class="page-eyebrow">WPF Perspective</div>
+      <h1 class="page-h1">Intelligence for the<br><em>discerning investor.</em></h1>
+      <p class="hero-sub">Market commentary, investment analysis, and financial planning perspectives — authored by Amit Aggarwal & Yogesh Sharma.</p>
+    </div>
+  </section>
+
+  <div class="filter-bar">
+    <button class="filter-btn active">All Perspectives</button>
+    <button class="filter-btn">Investments</button>
+    <button class="filter-btn">Insurance</button>
+    <button class="filter-btn">Capital & Loans</button>
+    <button class="filter-btn">Markets</button>
+    <button class="filter-btn">Planning</button>
+  </div>
+
+  <div class="insights-featured">
+    <div class="if-inner">
+      <div>
+        <div class="if-tag">Featured Perspective · February 2026</div>
+        <h2 class="if-h2">Interest Rate Expectations & What They Mean for Your <em>Debt Portfolio</em> in 2026</h2>
+        <p class="if-excerpt">With the RBI signalling a cautious easing cycle and 10-year G-Sec yields declining from their 2025 highs, duration plays are back in focus. We outline a three-tier strategy for debt allocation across short, medium, and long-term horizons for HNI investors — and the specific fund categories to watch.</p>
+        <div class="if-meta">
+          <div class="if-author">
+            <div class="if-avatar">AA</div>
+            <div class="if-author-name">Amit Aggarwal</div>
+          </div>
+          <div class="if-date">February 2026 · 8 min read</div>
+          <a class="if-read" onclick="openArticle('art1')">Read Perspective →</a>
+        </div>
+      </div>
+      <div class="if-image">
+        <div class="if-image-inner">₹</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="articles-section">
+    <div class="arts-inner">
+      <div class="section-label">Recent Perspectives</div>
+      <div class="arts-grid">
+        <div class="art-card fade-up" onclick="openArticle('art2')">
+          <div class="art-card-img">D&amp;O<div class="art-card-img-label">Insurance</div></div>
+          <div class="art-body">
+            <div class="art-tag">Insurance</div>
+            <div class="art-title">Why Your D&O Policy Needs a Review Before FY2026 Closes</div>
+            <div class="art-excerpt">Regulatory changes have meaningfully altered the risk landscape for directors and officers. Most existing policies are inadequate for today's environment.</div>
+            <div class="art-footer"><span class="art-author">Yogesh Sharma</span><span class="art-date">Jan 2026</span></div>
+          </div>
+        </div>
+        <div class="art-card fade-up" style="transition-delay:0.1s" onclick="openArticle('art3')">
+          <div class="art-card-img" style="font-family:Cormorant Garamond;font-size:48px;color:rgba(201,168,76,0.1)">AIF<div class="art-card-img-label">Investments</div></div>
+          <div class="art-body">
+            <div class="art-tag">Investments</div>
+            <div class="art-title">AIF Category III: Is It Right for Your Portfolio?</div>
+            <div class="art-excerpt">We demystify Alternative Investment Funds — who they are really for, what they cost, and when they genuinely add value beyond mutual funds.</div>
+            <div class="art-footer"><span class="art-author">Amit Aggarwal</span><span class="art-date">Dec 2025</span></div>
+          </div>
+        </div>
+        <div class="art-card fade-up" style="transition-delay:0.2s" onclick="openArticle('art4')">
+          <div class="art-card-img" style="font-size:36px;color:rgba(201,168,76,0.1)">SIP<div class="art-card-img-label">Planning</div></div>
+          <div class="art-body">
+            <div class="art-tag">Planning</div>
+            <div class="art-title">The ₹1 Crore SIP Myth: What the Calculators Don't Tell You</div>
+            <div class="art-excerpt">Compounding calculators are optimistic by design. Real wealth creation requires adjustments for inflation, taxes, and behavioural risks that most investors ignore.</div>
+            <div class="art-footer"><span class="art-author">Amit Aggarwal</span><span class="art-date">Nov 2025</span></div>
+          </div>
+        </div>
+        <div class="art-card fade-up" onclick="openArticle('art5')">
+          <div class="art-card-img" style="font-size:32px;color:rgba(201,168,76,0.1)">LAP<div class="art-card-img-label">Capital</div></div>
+          <div class="art-body">
+            <div class="art-tag">Capital & Loans</div>
+            <div class="art-title">Loan Against Property: When It Transforms Your Balance Sheet</div>
+            <div class="art-excerpt">At 9.25% against property yielding 4–5% rental, LAP looks counterintuitive. But for business owners deploying capital at 20–30% returns, the math changes completely.</div>
+            <div class="art-footer"><span class="art-author">Yogesh Sharma</span><span class="art-date">Oct 2025</span></div>
+          </div>
+        </div>
+        <div class="art-card fade-up" style="transition-delay:0.1s" onclick="openArticle('art6')">
+          <div class="art-card-img" style="font-size:36px;color:rgba(201,168,76,0.1)">PMS<div class="art-card-img-label">Investments</div></div>
+          <div class="art-body">
+            <div class="art-tag">Investments</div>
+            <div class="art-title">PMS vs Mutual Fund: The ₹50 Lakh Question</div>
+            <div class="art-excerpt">For investors crossing the ₹50L investable asset threshold, Portfolio Management Services opens new possibilities. Here is an honest comparison of what you actually get.</div>
+            <div class="art-footer"><span class="art-author">Amit Aggarwal</span><span class="art-date">Sep 2025</span></div>
+          </div>
+        </div>
+        <div class="art-card fade-up" style="transition-delay:0.2s" onclick="openArticle('art7')">
+          <div class="art-card-img" style="font-size:32px;color:rgba(201,168,76,0.1)">HI<div class="art-card-img-label">Insurance</div></div>
+          <div class="art-body">
+            <div class="art-tag">Insurance</div>
+            <div class="art-title">Your ₹5 Lakh Health Cover Is No Longer Enough. Here's What Is.</div>
+            <div class="art-excerpt">Medical inflation in India runs at 14% annually. The health cover you bought in 2018 covers a fraction of what it once did. We run the updated numbers.</div>
+            <div class="art-footer"><span class="art-author">Yogesh Sharma</span><span class="art-date">Aug 2025</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="newsletter">
+    <div class="nl-inner">
+      <div class="nl-eyebrow">WPF Perspective Newsletter</div>
+      <h2 class="nl-h2">Stay ahead with <em>monthly insights</em><br>from our founders.</h2>
+      <p class="nl-sub">Market commentary, planning ideas, and financial intelligence — delivered directly to your inbox, once a month. No spam. No product pitches. Just thinking.</p>
+      <div class="nl-form">
+        <input type="email" placeholder="Your email address">
+        <button>Subscribe</button>
+      </div>
+      <div class="nl-note">Read by 2,000+ investors across Delhi-NCR · Unsubscribe anytime</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============== CONNECT PAGE =============== -->
+<div class="page" id="page-connect">
+  <section class="page-hero">
+    <div class="page-hero-line"></div>
+    <div class="page-hero-content">
+      <div class="page-eyebrow">Begin the Conversation</div>
+      <h1 class="page-h1">Your wealth deserves<br><em>deliberate attention.</em></h1>
+      <p class="hero-sub">A private conversation with our founders — no obligations, no generic advice, no sales pitch. Just an honest discussion about your financial goals.</p>
+    </div>
+  </section>
+
+  <div class="connect-layout">
+    <div class="connect-left">
+      <div class="cl-label">Our Offices</div>
+      <h2 class="cl-h2">Three locations.<br><em>One unified</em> advisory team.</h2>
+      <p class="cl-sub">Whether you prefer to meet in person at Janak Puri, Gurugram, or Rohini — or connect over a call — we work around your schedule.</p>
+      <div class="offices">
+        <div class="office">
+          <div class="office-dot"></div>
+          <div>
+            <div class="office-name">Head Office · Janak Puri</div>
+            <div class="office-addr">Unit No B 8, Lower Ground Floor<br>Mahatta Tower, B Block Community Centre<br>Janak Puri, New Delhi — 110058</div>
+          </div>
+        </div>
+        <div class="office">
+          <div class="office-dot"></div>
+          <div>
+            <div class="office-name">Branch · Gurugram</div>
+            <div class="office-addr">SCO-94, 2nd Floor, M3M Market<br>Sector 113, Gurugram — 122017</div>
+          </div>
+        </div>
+        <div class="office">
+          <div class="office-dot"></div>
+          <div>
+            <div class="office-name">Branch · Rohini</div>
+            <div class="office-addr">B-6 / 158, First Floor<br>Sector-8, Rohini, Delhi — 110085</div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-links">
+        <a class="contact-link">
+          <div class="cl-icon">📞</div>
+          <div>
+            <div class="cl-label2">Call us directly</div>
+            <div class="cl-text">+91 9910 709 583 / +91 9810 636381</div>
+          </div>
+        </a>
+        <a class="contact-link">
+          <div class="cl-icon">📞</div>
+          <div>
+            <div class="cl-label2">Landline</div>
+            <div class="cl-text">011 - 45604244</div>
+          </div>
+        </a>
+        <a class="contact-link">
+          <div class="cl-icon">✉</div>
+          <div>
+            <div class="cl-label2">Amit Aggarwal</div>
+            <div class="cl-text">amit@wpfcapital.in</div>
+          </div>
+        </a>
+        <a class="contact-link">
+          <div class="cl-icon">✉</div>
+          <div>
+            <div class="cl-label2">Yogesh Sharma</div>
+            <div class="cl-text">yogeshsharma@wpfcapital.in</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="connect-right">
+      <div class="cr-label">Private Consultation Request</div>
+      <h2 class="cr-h2">Tell us about<br>your financial goals.</h2>
+      <p class="cr-sub">Fill in a few details and one of our founders will be in touch within 4 business hours.</p>
+      <div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">Full Name</label>
+            <input class="form-input" type="text" placeholder="Your full name">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Phone Number</label>
+            <input class="form-input" type="tel" placeholder="+91 98765 43210">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" placeholder="your@email.com">
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">Investable Assets</label>
+            <select class="form-select form-input">
+              <option value="" disabled selected>Select range</option>
+              <option>₹25L – ₹1 Crore</option>
+              <option>₹1 Crore – ₹5 Crore</option>
+              <option>₹5 Crore – ₹25 Crore</option>
+              <option>Above ₹25 Crore</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Primary Interest</label>
+            <select class="form-select form-input">
+              <option value="" disabled selected>Select area</option>
+              <option>Investment Advisory</option>
+              <option>Insurance Review</option>
+              <option>Home / Business Loan</option>
+              <option>Complete Financial Review</option>
+              <option>Portfolio Management (PMS)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Preferred Consultation Office</label>
+          <select class="form-select form-input">
+            <option value="" disabled selected>Select location</option>
+            <option>Janak Puri, New Delhi (Head Office)</option>
+            <option>Gurugram (M3M Market)</option>
+            <option>Rohini, Delhi</option>
+            <option>Phone / Video Call</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Briefly describe your financial goals (optional)</label>
+          <textarea class="form-textarea" placeholder="e.g. I want to build a ₹5 Crore corpus for retirement in 15 years, review my insurance covers, and explore PMS options..."></textarea>
+        </div>
+        <button class="btn-submit">Request My Private Consultation</button>
+        <div class="form-note">Your information is held in absolute confidence and never shared with third parties.<br>We respond within 4 business hours.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="partners-section">
+    <div class="ps-inner">
+      <div class="ps-label">Authorised Channel Partner With India's Leading Financial Institutions</div>
+      <div class="ps-row">
+        <div class="ps-name">HDFC Bank</div>
+        <div class="ps-name">ICICI Bank</div>
+        <div class="ps-name">Bank of Baroda</div>
+        <div class="ps-name">Axis Bank</div>
+        <div class="ps-name">Citibank</div>
+        <div class="ps-name">RBL Bank</div>
+        <div class="ps-name">LIC</div>
+        <div class="ps-name">Tata AIG</div>
+        <div class="ps-name">Birla Sun Life</div>
+        <div class="ps-name">Cigna</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-section">
+    <div class="map-inner">
+      <h2 class="map-h2">Find us across Delhi-NCR.</h2>
+      <div class="map-grid">
+        <div class="map-card">
+          <div class="mc-city">New Delhi · Head Office</div>
+          <div class="mc-name">Janak Puri</div>
+          <div class="mc-addr">Unit No B 8, Lower Ground Floor<br>Mahatta Tower, B Block<br>Community Centre, Janak Puri<br>New Delhi — 110058</div>
+          <a href="https://maps.google.com" class="mc-link">Get Directions →</a>
+        </div>
+        <div class="map-card">
+          <div class="mc-city">Haryana · Branch</div>
+          <div class="mc-name">Gurugram</div>
+          <div class="mc-addr">SCO-94, 2nd Floor<br>M3M Market, Sector 113<br>Gurugram — 122017</div>
+          <a href="https://maps.google.com" class="mc-link">Get Directions →</a>
+        </div>
+        <div class="map-card">
+          <div class="mc-city">New Delhi · Branch</div>
+          <div class="mc-name">Rohini</div>
+          <div class="mc-addr">B-6 / 158, First Floor<br>Sector-8, Rohini<br>Delhi — 110085</div>
+          <a href="https://maps.google.com" class="mc-link">Get Directions →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLE MODAL -->
+<div class="article-modal" id="articleModal">
+  <div class="am-inner">
+    <button class="am-close" onclick="closeArticle()">✕</button>
+    <div id="articleContent"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">WPF Capital</div>
+      <div class="footer-brand-sub">Private Wealth & Advisory</div>
+      <p class="footer-about">Founded in 2016, WPF Capital is Delhi-NCR's trusted private wealth advisory firm — investment advisory, insurance, and capital solutions.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Services</div>
+      <a href="#">Investment Advisory</a>
+      <a href="#">Protection & Insurance</a>
+      <a href="#">Capital Solutions</a>
+      <a href="#">WPF Platform</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Useful Links</div>
+      <a href="#">Know Your PAN</a>
+      <a href="#">KYC Status</a>
+      <a href="#">SEBI Investor Awareness</a>
+      <a href="#">NISM / NCFM</a>
+      <a href="#">Reserve Bank of India</a>
+      <a href="#">eAadhaar</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Offices</div>
+      <p>Janak Puri, New Delhi</p>
+      <p>M3M Market, Gurugram</p>
+      <p>Sector-8, Rohini, Delhi</p>
+      <p style="margin-top:12px;color:var(--gold)">+91 99107 09583</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-legal">© 2026 WPF Capital. All rights reserved. · <a href="#" style="color:inherit">Privacy Policy</a></div>
+    <div class="footer-sebi">SEBI Registered · AMFI Registered Mutual Fund Distributor · IRDAI Authorised</div>
+  </div>
+</footer>
+
+<script>
+// Page switcher
+document.getElementById('sw-insights').addEventListener('click',()=>switchPage('insights'));
+document.getElementById('sw-connect').addEventListener('click',()=>switchPage('connect'));
+document.getElementById('nav-connect-link').addEventListener('click',e=>{e.preventDefault();switchPage('connect')});
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.psw-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.getElementById('sw-'+p).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Filter
+document.querySelectorAll('.filter-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(fb=>fb.classList.remove('active'));
+    b.classList.add('active');
+  });
+});
+
+// Articles
+const articles = {
+  art1:{tag:'Market Perspective',title:'Interest Rate Expectations & What They Mean for Your Debt Portfolio in 2026',author:'Amit Aggarwal',date:'February 2026 · 8 min read',
+    body:`<p>The Reserve Bank of India's Monetary Policy Committee has held rates steady through 2025 and into early 2026 — but the direction of travel is increasingly clear. With retail inflation trending below the 5% mark and global central banks (led by the Fed) in various stages of their own cutting cycles, the RBI is expected to begin its easing cycle in H1 2026.</p>
+<h3>What this means for fixed income</h3>
+<p>When rates fall, bond prices rise. This relationship — simple in theory, often misunderstood in practice — is the central mechanic that makes 2026 a potentially significant year for debt fund investors. The longer the duration of a fund's portfolio, the greater its price sensitivity to rate movements.</p>
+<div class="am-pull">"Duration risk, so often spoken about as a danger, becomes your greatest ally when the rate cycle turns in your favour."</div>
+<h3>Our Three-Tier Debt Allocation Strategy</h3>
+<p><strong>Tier 1 — Liquid and Ultra Short (20–30% of debt allocation):</strong> For capital preservation and liquidity. These funds are relatively insensitive to rate movements and serve as the stable, accessible portion of your fixed income portfolio. Current yields of 7.2–7.5% are competitive against short-term FDs.</p>
+<p><strong>Tier 2 — Short to Medium Duration (30–40% of debt allocation):</strong> 2–4 year modified duration funds that offer a balance of yield and some capital appreciation upside as rates decline. Corporate bond funds and banking & PSU funds in this category offer attractive risk-adjusted returns.</p>
+<p><strong>Tier 3 — Long Duration / Gilt (30–40% of debt allocation):</strong> This is where the rate cut thesis pays off most visibly. For investors with a 2–3 year horizon, long duration gilt funds or dynamic bond funds with high duration offer meaningful potential for capital appreciation on top of coupon income. This tier carries more volatility but also the highest potential return in a falling rate environment.</p>
+<h3>What to avoid</h3>
+<p>Credit risk funds — those that take on lower-rated corporate paper for higher yield — deserve extra scrutiny in the current environment. Several segments of corporate credit remain stressed. We are cautious here and continue to prefer sovereign and AAA-rated instruments for our clients.</p>
+<p>The bottom line: 2026 may well be remembered as the year that patient debt investors were rewarded. We are positioning our clients accordingly.</p>`},
+  art2:{tag:'Insurance',title:'Why Your D&O Policy Needs a Review Before FY2026 Closes',author:'Yogesh Sharma',date:'January 2026 · 6 min read',
+    body:`<p>India's regulatory environment has changed substantially over the past 24 months. New SEBI circulars, tightened IBBI regulations, and a more assertive enforcement posture from the Ministry of Corporate Affairs mean that the personal financial exposure of directors and senior officers at Indian companies has increased significantly.</p>
+<h3>Why most existing D&O policies are inadequate</h3>
+<p>The typical D&O policy purchased 3–5 years ago was designed for a different regulatory landscape. Claim limits that seemed conservative then may now be genuinely insufficient. More importantly, the definitions of "wrongful acts" and the carve-outs for regulatory investigations have shifted in ways that leave many policyholders exposed.</p>
+<div class="am-pull">"A D&O policy that hasn't been reviewed in 3 years is not a policy. It's a false sense of security."</div>
+<h3>What a review should cover</h3>
+<p>We recommend a structured review that examines: (1) Sum insured adequacy against current company turnover and regulatory risk profile, (2) Entity vs. Individual coverage split, (3) Side A, B, and C coverage structure, (4) Investigation costs coverage, (5) Run-off provisions for departing directors.</p>
+<p>The cost of getting this right is marginal. The cost of getting it wrong can be existential for an individual director.</p>`},
+  art3:{tag:'Investments',title:'AIF Category III: Is It Right for Your Portfolio?',author:'Amit Aggarwal',date:'December 2025 · 7 min read',
+    body:`<p>Alternative Investment Funds have attracted substantial attention from India's HNI investor community. With Category III AIFs now managing over ₹5 lakh crore in assets, it is worth asking: who are these products genuinely designed for, and when do they make sense?</p>
+<h3>Understanding the three categories</h3>
+<p><strong>Category I AIFs</strong> invest in socially or economically desirable areas — venture capital, SME funds, infrastructure, and social impact funds. They receive government incentives and are suitable for investors with a long time horizon and appetite for illiquid, early-stage risk.</p>
+<p><strong>Category II AIFs</strong> include private equity funds, real estate funds, and distressed asset funds. These offer access to illiquid premium assets — often generating returns that are genuinely uncorrelated with listed markets.</p>
+<p><strong>Category III AIFs</strong> are the most complex — they can use leverage, invest in listed and unlisted securities, and employ diverse trading strategies including long-short, derivatives, and arbitrage. They are closest in structure to global hedge funds.</p>
+<div class="am-pull">"AIF fees are real. Alpha is not guaranteed. The question is whether the strategy genuinely offers something mutual funds cannot."</div>
+<h3>When Category III makes sense in a portfolio</h3>
+<p>Category III AIFs make genuine sense for investors with: (1) Investable assets above ₹5 Crore, where the ₹1 Crore minimum is not a disproportionate allocation; (2) A 3+ year horizon; (3) Existing equity and debt mutual fund portfolios that are well-established; and (4) A specific strategy rationale — not just diversification for its own sake.</p>
+<p>For most investors below ₹5 Crore investable assets, a well-constructed mutual fund portfolio — potentially supplemented by PMS at the ₹50L+ level — will deliver better net-of-fee outcomes than Category III AIFs.</p>`}
+};
+articles.art4={tag:'Planning',title:'The ₹1 Crore SIP Myth: What the Calculators Don't Tell You',author:'Amit Aggarwal',date:'November 2025 · 5 min read',body:`<p>India's mutual fund industry has done tremendous work educating investors about the power of compounding through SIPs. The marketing works. Millions of investors now run systematic investment plans with admirable discipline.</p><p>But the calculators that show you reaching ₹1 Crore in 15 years on a ₹15,000 monthly SIP are, at best, incomplete — and at worst, actively misleading for serious wealth planning.</p><div class="am-pull">"A nominal ₹1 Crore in 2040 is not the same as ₹1 Crore today. Planning for the number without planning for what it needs to do is planning to fall short."</div><h3>Three things the calculator doesn't factor in</h3><p><strong>1. Inflation erodes purchasing power.</strong> At 6% annual inflation, ₹1 Crore in 2040 has the purchasing power of roughly ₹42 lakhs today. Your retirement corpus goal should be denominated in today's money — then inflated forward, not the other way around.</p><p><strong>2. Tax is a real cost.</strong> Long-term capital gains on equity mutual funds are now taxable at 12.5% above ₹1.25 lakh annually. A 12% nominal return becomes something meaningfully lower on a post-tax basis, particularly for HNIs in the 30% bracket.</p><p><strong>3. Behavioural risk is underpriced.</strong> The biggest threat to long-term SIP returns is not market volatility — it is investor behaviour during volatility. Pausing, stopping, or redeeming during a 30–40% drawdown is the single most common destroyer of wealth in India's retail investment community.</p>`};
+articles.art5={tag:'Capital & Loans',title:'Loan Against Property: When It Transforms Your Balance Sheet',author:'Yogesh Sharma',date:'October 2025 · 5 min read',body:`<p>The instinctive reaction to the idea of borrowing against your property is often negative. You have worked hard to build this asset. Why encumber it?</p><p>This reaction makes emotional sense. But it doesn't always make financial sense — particularly for business owners and entrepreneurs who have capital sitting in illiquid real estate while their business has opportunities that require funding.</p><div class="am-pull">"Real estate sitting idle on a balance sheet is capital in the wrong form. LAP is simply a way to redeploy it."</div><h3>The arbitrage that makes LAP work</h3><p>A Loan Against Property at 9.25% is not expensive if the capital being released is deployed in a business generating 20–30% returns. The positive carry — the difference between your cost of capital and your return on deployed capital — is the economic logic of leverage.</p><p>This is not a strategy for everyone. It requires discipline, a clear deployment plan, and the cash flow stability to service the EMI comfortably. But for the right entrepreneur, LAP can genuinely transform a balance sheet.</p>`};
+articles.art6={tag:'Investments',title:'PMS vs Mutual Fund: The ₹50 Lakh Question',author:'Amit Aggarwal',date:'September 2025 · 6 min read',body:`<p>Portfolio Management Services occupy an interesting position in India's investment landscape. They are too complex and expensive for most retail investors, but potentially very appropriate for investors crossing the ₹50 lakh investable threshold — SEBI's prescribed minimum.</p><h3>What PMS actually offers</h3><p>The core differentiation is customisation and direct ownership. In a mutual fund, you own units — your portfolio is pooled with thousands of other investors and you have no say in what is held. In a PMS, you own the underlying securities directly. Your portfolio can be customised to your specific needs — tax situation, sector preferences, concentration limits, and rebalancing triggers.</p><div class="am-pull">"The question with PMS is never 'is the return higher than mutual funds?' It is 'does the strategy offer genuine differentiation for which the fee is justified?'"</div><h3>When PMS makes sense</h3><p>PMS makes sense when: (1) You have ₹50L+ to allocate to a single strategy; (2) The strategy genuinely does something mutual funds don't do (specific sector concentration, special situations, absolute return approach); and (3) The manager's track record is verified and audited over a full market cycle — not just the last 3 bull-market years.</p>`};
+articles.art7={tag:'Insurance',title:'Your ₹5 Lakh Health Cover Is No Longer Enough',author:'Yogesh Sharma',date:'August 2025 · 5 min read',body:`<p>India's medical inflation runs at approximately 14% annually — nearly double the broader consumer price inflation rate. This means that a health insurance policy you bought in 2018 with a ₹5 lakh sum insured now effectively covers roughly ₹2.5 lakhs of today's medical costs.</p><h3>What adequate cover looks like in 2026</h3><p>For a family of four in a metro city, we now recommend a minimum sum insured of ₹20–25 lakhs — with a super top-up policy to extend this to ₹1 Crore for catastrophic events. The incremental premium for a super top-up is surprisingly affordable relative to the protection it provides.</p><div class="am-pull">"The family that hasn't reviewed their health cover in 3 years is underinsured. In India's healthcare cost environment, this is not a small risk."</div><h3>Key features to look for</h3><p>Beyond sum insured, the features that matter most are: (1) No co-payment clauses; (2) No sub-limits on room rent — these can devastate a claim; (3) Restoration benefit for multiple claims in a year; (4) Day-care treatment coverage; and (5) Lifetime renewability with no claim-based loading.</p>`};
+
+function openArticle(id){
+  const a = articles[id];
+  if(!a) return;
+  document.getElementById('articleContent').innerHTML = `<div class="am-tag">${a.tag}</div><h2 class="am-title">${a.title}</h2><div class="am-meta"><span class="am-author">By <strong>${a.author}</strong></span><span class="am-date">${a.date}</span></div><div class="am-body">${a.body}</div>`;
+  document.getElementById('articleModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeArticle(){
+  document.getElementById('articleModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('articleModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeArticle()});
+
+// Scroll animations
+const obs = new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:0.1});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
