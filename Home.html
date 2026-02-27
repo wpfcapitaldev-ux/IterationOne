@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WPF Capital — Private Wealth & Advisory</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0A1628;
+    --navy-mid: #122040;
+    --gold: #C9A84C;
+    --gold-light: #E2C97E;
+    --cream: #F5F0E8;
+    --off-white: #FAFAF8;
+    --charcoal: #1C1C1E;
+    --mid-gray: #6B6B6B;
+    --light-gray: #D4D0C8;
+    --sage: #8A9E8B;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); overflow-x: hidden; }
+  
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 60px;
+    background: transparent;
+    transition: background 0.4s, padding 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(10,22,40,0.97);
+    padding: 16px 60px;
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo { display: flex; flex-direction: column; }
+  .nav-logo-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600; letter-spacing: 3px;
+    color: #fff; text-transform: uppercase;
+  }
+  .nav-logo-sub {
+    font-size: 9px; letter-spacing: 2.5px; color: var(--gold);
+    text-transform: uppercase; margin-top: 2px;
+  }
+  .nav-links { display: flex; gap: 40px; align-items: center; }
+  .nav-links a {
+    color: rgba(255,255,255,0.75); text-decoration: none;
+    font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    background: transparent; border: 1px solid var(--gold);
+    color: var(--gold) !important; padding: 10px 22px;
+    font-size: 11px !important; letter-spacing: 1.5px;
+    transition: all 0.3s !important;
+  }
+  .nav-cta:hover { background: var(--gold) !important; color: var(--navy) !important; }
+
+  /* HERO */
+  .hero {
+    height: 100vh; min-height: 700px;
+    background: var(--navy);
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg-art {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .hero-bg-art::before {
+    content: '';
+    position: absolute; top: -20%; right: -10%;
+    width: 70vw; height: 70vw; max-width: 900px; max-height: 900px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 65%);
+  }
+  .hero-bg-art::after {
+    content: '';
+    position: absolute; bottom: -10%; left: 10%;
+    width: 40vw; height: 40vw;
+    border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 50%;
+    animation: slowRotate 30s linear infinite;
+  }
+  @keyframes slowRotate { to { transform: rotate(360deg); } }
+
+  .hero-line {
+    position: absolute; left: 60px; top: 0; bottom: 0;
+    width: 1px; background: rgba(201,168,76,0.2);
+  }
+
+  .hero-content { padding: 0 60px 0 100px; max-width: 800px; z-index: 2; }
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 4px; color: var(--gold);
+    text-transform: uppercase; margin-bottom: 32px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 30px; height: 1px; background: var(--gold);
+  }
+  .hero-h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 6vw, 88px);
+    font-weight: 300; line-height: 1.05;
+    color: #fff; margin-bottom: 12px;
+  }
+  .hero-h1 em {
+    font-style: italic; color: var(--gold-light);
+  }
+  .hero-rule { width: 60px; height: 1px; background: var(--gold); margin: 32px 0; }
+  .hero-sub {
+    font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.6);
+    max-width: 460px; margin-bottom: 48px; font-weight: 300;
+  }
+  .hero-actions { display: flex; align-items: center; gap: 32px; }
+  .btn-primary {
+    background: var(--gold); color: var(--navy);
+    padding: 16px 36px; font-size: 12px; letter-spacing: 2px;
+    text-transform: uppercase; border: none; cursor: pointer;
+    transition: all 0.3s; text-decoration: none; display: inline-block;
+    font-weight: 500;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .hero-link {
+    color: rgba(255,255,255,0.5); font-size: 12px; letter-spacing: 1.5px;
+    text-transform: uppercase; text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 2px;
+    transition: all 0.3s;
+  }
+  .hero-link:hover { color: var(--gold); border-color: var(--gold); }
+
+  .hero-stats {
+    position: absolute; bottom: 60px; right: 60px;
+    display: flex; gap: 48px; z-index: 2;
+  }
+  .stat { text-align: right; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px; font-weight: 300; color: #fff;
+    letter-spacing: -1px;
+  }
+  .stat-num span { color: var(--gold); font-size: 20px; }
+  .stat-label { font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-top: 4px; }
+
+  /* SECTION: PHILOSOPHY */
+  .section { padding: 120px 60px; }
+  .section-label {
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .section-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
+  
+  .philosophy { background: var(--cream); }
+  .philosophy-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; }
+  .phil-h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4vw, 56px); font-weight: 300; line-height: 1.15;
+    color: var(--navy); margin-bottom: 32px;
+  }
+  .phil-h2 em { font-style: italic; color: var(--gold); }
+  .phil-body { font-size: 15px; line-height: 1.8; color: var(--mid-gray); margin-bottom: 24px; }
+  .phil-sig {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 18px; color: var(--navy); margin-top: 32px;
+  }
+  .phil-sig-sub { font-size: 11px; letter-spacing: 2px; color: var(--mid-gray); text-transform: uppercase; margin-top: 4px; }
+
+  .phil-pillars { display: flex; flex-direction: column; gap: 0; }
+  .pillar {
+    padding: 32px 0; border-bottom: 1px solid var(--light-gray);
+    display: grid; grid-template-columns: 50px 1fr; gap: 24px; align-items: start;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .pillar:first-child { border-top: 1px solid var(--light-gray); }
+  .pillar:hover .pillar-num { color: var(--gold); }
+  .pillar-num {
+    font-family: 'Cormorant Garamond', serif; font-size: 14px;
+    color: var(--light-gray); font-weight: 300; transition: color 0.3s;
+    padding-top: 4px;
+  }
+  .pillar-title { font-size: 16px; font-weight: 500; color: var(--navy); margin-bottom: 8px; }
+  .pillar-desc { font-size: 13px; line-height: 1.7; color: var(--mid-gray); }
+
+  /* SERVICES */
+  .services { background: var(--navy); }
+  .services-inner { max-width: 1200px; margin: 0 auto; }
+  .services .section-label { color: var(--gold); }
+  .services-h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4vw, 52px); font-weight: 300;
+    color: #fff; margin-bottom: 64px; max-width: 500px; line-height: 1.2;
+  }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .service-card {
+    background: rgba(255,255,255,0.04); padding: 48px 40px;
+    border-top: 2px solid transparent; transition: all 0.4s;
+    cursor: pointer; position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold); transform: scaleX(0); transition: transform 0.4s;
+    transform-origin: left;
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-card:hover { background: rgba(201,168,76,0.06); }
+  .service-icon {
+    width: 40px; height: 40px; margin-bottom: 32px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .service-icon svg { width: 28px; height: 28px; }
+  .service-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 24px;
+    color: #fff; margin-bottom: 16px; font-weight: 300;
+  }
+  .service-desc { font-size: 13px; line-height: 1.8; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
+  .service-items { list-style: none; }
+  .service-items li {
+    font-size: 11px; letter-spacing: 0.5px; color: rgba(255,255,255,0.35);
+    padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; gap: 10px; align-items: center;
+  }
+  .service-items li::before { content: '—'; color: var(--gold); font-size: 10px; }
+
+  /* TEAM */
+  .team { background: var(--off-white); }
+  .team-inner { max-width: 1200px; margin: 0 auto; }
+  .team-h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4vw, 52px); font-weight: 300;
+    color: var(--navy); margin-bottom: 64px; line-height: 1.2;
+  }
+  .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .team-card {
+    border: 1px solid var(--light-gray); padding: 48px;
+    transition: all 0.4s; cursor: pointer; position: relative;
+    overflow: hidden;
+  }
+  .team-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transform: scaleX(0); transition: transform 0.4s; transform-origin: left;
+  }
+  .team-card:hover::after { transform: scaleX(1); }
+  .team-card:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.08); transform: translateY(-4px); }
+  .team-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--navy); display: flex; align-items: center; justify-content: center;
+    margin-bottom: 28px;
+    font-family: 'Cormorant Garamond', serif; font-size: 24px;
+    color: var(--gold); font-weight: 300;
+  }
+  .team-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--navy); margin-bottom: 4px; }
+  .team-role { font-size: 11px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 24px; }
+  .team-bio { font-size: 14px; line-height: 1.8; color: var(--mid-gray); }
+  .team-credentials { display: flex; gap: 24px; margin-top: 28px; flex-wrap: wrap; }
+  .credential { font-size: 11px; color: var(--navy); letter-spacing: 1px; font-weight: 500; }
+  .credential::before { content: '✦ '; color: var(--gold); font-size: 9px; }
+
+  /* PARTNERS */
+  .partners { background: var(--cream); padding: 80px 60px; }
+  .partners-inner { max-width: 1200px; margin: 0 auto; }
+  .partners-label {
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--mid-gray); text-align: center; margin-bottom: 48px;
+  }
+  .partners-row { display: flex; gap: 60px; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .partner-name {
+    font-family: 'Cormorant Garamond', serif; font-size: 18px;
+    color: var(--navy); opacity: 0.4; transition: opacity 0.3s;
+    cursor: default; font-weight: 600; letter-spacing: 1px;
+  }
+  .partner-name:hover { opacity: 0.9; }
+
+  /* INSIGHT */
+  .insight { background: var(--navy); }
+  .insight-inner { max-width: 1200px; margin: 0 auto; }
+  .insight .section-label { color: var(--gold); }
+  .insight-h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 3.5vw, 48px); font-weight: 300;
+    color: #fff; margin-bottom: 56px;
+  }
+  .insight-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2px; }
+  .insight-card {
+    background: rgba(255,255,255,0.04); padding: 40px;
+    transition: background 0.3s; cursor: pointer;
+  }
+  .insight-card:hover { background: rgba(255,255,255,0.07); }
+  .insight-tag { font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 20px; }
+  .insight-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #fff; margin-bottom: 16px; line-height: 1.3; }
+  .insight-excerpt { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
+  .insight-date { font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: 1px; }
+  .insight-card.featured { background: rgba(201,168,76,0.08); }
+  .insight-card.featured .insight-title { font-size: 28px; }
+
+  /* CTA SECTION */
+  .cta-section {
+    background: var(--cream); padding: 120px 60px;
+    text-align: center;
+  }
+  .cta-eyebrow { font-size: 11px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 24px; }
+  .cta-h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 72px); font-weight: 300;
+    color: var(--navy); margin-bottom: 20px; line-height: 1.1;
+  }
+  .cta-h2 em { font-style: italic; color: var(--gold); }
+  .cta-sub { font-size: 15px; color: var(--mid-gray); margin-bottom: 48px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+  .cta-form { display: flex; gap: 0; max-width: 500px; margin: 0 auto; }
+  .cta-form input {
+    flex: 1; padding: 18px 24px; border: 1px solid var(--light-gray);
+    background: #fff; font-size: 14px; color: var(--charcoal);
+    outline: none; transition: border 0.3s;
+    font-family: 'Inter', sans-serif;
+  }
+  .cta-form input:focus { border-color: var(--gold); }
+  .cta-form button {
+    background: var(--navy); color: var(--gold);
+    padding: 18px 32px; border: none; font-size: 12px;
+    letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+    transition: background 0.3s; white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+  }
+  .cta-form button:hover { background: var(--gold); color: var(--navy); }
+  .cta-note { font-size: 11px; color: var(--light-gray); margin-top: 16px; letter-spacing: 1px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy); color: rgba(255,255,255,0.5);
+    padding: 80px 60px 40px;
+  }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+  .footer-brand-name {
+    font-family: 'Cormorant Garamond', serif; font-size: 20px;
+    color: #fff; letter-spacing: 3px; font-weight: 600; margin-bottom: 4px;
+  }
+  .footer-brand-sub { font-size: 9px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; margin-bottom: 20px; }
+  .footer-about { font-size: 13px; line-height: 1.7; max-width: 280px; }
+  .footer-col-title { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+  .footer-col a, .footer-col p { display: block; font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; margin-bottom: 10px; transition: color 0.3s; line-height: 1.6; }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 32px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-legal { font-size: 11px; }
+  .footer-sebi { font-size: 10px; color: rgba(255,255,255,0.25); letter-spacing: 1px; }
+
+  /* Scroll indicator */
+  .scroll-ind {
+    position: absolute; bottom: 60px; left: 60px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 2;
+  }
+  .scroll-ind-line {
+    width: 1px; height: 60px; background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+  .scroll-ind-text { font-size: 9px; letter-spacing: 3px; color: rgba(255,255,255,0.3); text-transform: uppercase; writing-mode: vertical-lr; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">
+    <div class="nav-logo-mark">WPF Capital</div>
+    <div class="nav-logo-sub">Private Wealth & Advisory</div>
+  </div>
+  <div class="nav-links">
+    <a href="#">Philosophy</a>
+    <a href="#">Services</a>
+    <a href="#">Expertise</a>
+    <a href="#">Insights</a>
+    <a href="#" class="nav-cta">Request Consultation</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-art"></div>
+  <div class="hero-line"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Private Wealth Advisory · Delhi-NCR</div>
+    <h1 class="hero-h1">Wealth,<br><em>Architected.</em></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-sub">For those who have built something remarkable — and want everything that comes next to be equally deliberate.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn-primary">Request a Private Consultation</a>
+      <a href="#" class="hero-link">Our Philosophy</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">9<span>+</span></div>
+      <div class="stat-label">Years of Trust</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Offices, NCR</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">34<span>+</span></div>
+      <div class="stat-label">Years Combined</div>
+    </div>
+  </div>
+  <div class="scroll-ind">
+    <div class="scroll-ind-line"></div>
+    <div class="scroll-ind-text">Scroll</div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="section philosophy">
+  <div class="philosophy-inner">
+    <div>
+      <div class="section-label">Our Philosophy</div>
+      <h2 class="phil-h2">We don't sell products.<br>We build <em>financial architectures.</em></h2>
+      <p class="phil-body">At WPF Capital, we believe wealth is not a destination — it is a living system that demands thoughtful design, disciplined stewardship, and an advisor who answers to you alone.</p>
+      <p class="phil-body">Founded in 2016 by Amit Aggarwal and Yogesh Sharma, we have grown from a boutique advisory practice into Delhi-NCR's most trusted private wealth firm for entrepreneurs, professionals, and multi-generational families.</p>
+      <div class="phil-sig">Amit Aggarwal & Yogesh Sharma</div>
+      <div class="phil-sig-sub">Founders & Partners, WPF Capital</div>
+    </div>
+    <div class="phil-pillars">
+      <div class="pillar">
+        <div class="pillar-num">01</div>
+        <div>
+          <div class="pillar-title">Independence</div>
+          <div class="pillar-desc">We are not beholden to any single product manufacturer. Our recommendations are dictated solely by what serves your financial goals.</div>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">02</div>
+        <div>
+          <div class="pillar-title">Alignment</div>
+          <div class="pillar-desc">When you grow, we grow. Our business is built on long-term relationships, not transactional volume.</div>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">03</div>
+        <div>
+          <div class="pillar-title">Discretion</div>
+          <div class="pillar-desc">Your financial life is private. We operate with the confidentiality expected of a private family office.</div>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">04</div>
+        <div>
+          <div class="pillar-title">Completeness</div>
+          <div class="pillar-desc">Investments, protection, and capital — under one trusted roof. Because wealth cannot be managed in silos.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section services">
+  <div class="services-inner">
+    <div class="section-label" style="color:var(--gold)">What We Do</div>
+    <h2 class="services-h2">Comprehensive wealth solutions, built for complexity.</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 28 28" fill="none" stroke="#C9A84C" stroke-width="1.2">
+            <polyline points="2,22 8,14 14,18 20,8 26,4"/>
+            <circle cx="26" cy="4" r="2" fill="#C9A84C" stroke="none"/>
+          </svg>
+        </div>
+        <div class="service-title">Investment Advisory</div>
+        <div class="service-desc">Sophisticated, goal-aligned investment strategies spanning the full spectrum of asset classes — from liquid to alternative.</div>
+        <ul class="service-items">
+          <li>Mutual Funds & SIPs</li>
+          <li>Portfolio Management Services (PMS)</li>
+          <li>Alternative Investment Funds (AIF)</li>
+          <li>NCDs, Fixed Deposits & RBI Bonds</li>
+          <li>Secondary Market Bonds</li>
+          <li>Tax-Saving Capital Bonds</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 28 28" fill="none" stroke="#C9A84C" stroke-width="1.2">
+            <path d="M14 4 L4 10 L4 22 L24 22 L24 10 Z"/>
+            <path d="M10 22 L10 16 L18 16 L18 22"/>
+            <line x1="14" y1="4" x2="14" y2="8"/>
+          </svg>
+        </div>
+        <div class="service-title">Protection & Insurance</div>
+        <div class="service-desc">Comprehensive risk management for individuals and corporates — because preserved wealth is as valuable as created wealth.</div>
+        <ul class="service-items">
+          <li>Term & Life Insurance</li>
+          <li>Health & Critical Illness</li>
+          <li>D&O and Liability Policies</li>
+          <li>Marine & Asset Insurance</li>
+          <li>Corporate Group Covers</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 28 28" fill="none" stroke="#C9A84C" stroke-width="1.2">
+            <rect x="4" y="8" width="20" height="14" rx="1"/>
+            <path d="M8 8 L8 6 Q8 4 10 4 L18 4 Q20 4 20 6 L20 8"/>
+            <line x1="4" y1="14" x2="24" y2="14"/>
+            <circle cx="14" cy="17" r="1.5" fill="#C9A84C" stroke="none"/>
+          </svg>
+        </div>
+        <div class="service-title">Capital Solutions</div>
+        <div class="service-desc">Strategic access to capital for your personal and business needs, with institutional terms through our bank partnerships.</div>
+        <ul class="service-items">
+          <li>Home Loans (from 8.50%)</li>
+          <li>Loan Against Property</li>
+          <li>Business & Working Capital Loans</li>
+          <li>Personal Loans</li>
+          <li>Balance Transfers with Top-Up</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="section team">
+  <div class="team-inner">
+    <div class="section-label">Leadership</div>
+    <h2 class="team-h2">Two founders. One promise.<br>Your financial wellbeing.</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">AA</div>
+        <div class="team-name">Amit Aggarwal</div>
+        <div class="team-role">Founder & Partner</div>
+        <div class="team-bio">With an MBA in Finance from ICFAI Hyderabad and 17+ years of experience spanning wealth management, insurance, fund raising, and corporate finance, Amit founded WPF Group in 2016 with a singular conviction: that every Indian family deserves an advisor who treats their wealth as their own.</div>
+        <div class="team-credentials">
+          <div class="credential">MBA Finance, ICFAI</div>
+          <div class="credential">17+ Years Experience</div>
+          <div class="credential">Wealth & Corporate Finance</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">YS</div>
+        <div class="team-name">Yogesh Sharma</div>
+        <div class="team-role">Partner</div>
+        <div class="team-bio">An MBA Finance from ICFAI Hyderabad with 17 years of expertise across wealth management, fund raising, insurance, banking, and forex, Yogesh joined WPF Group in 2017 and has been central to building the firm's institutional relationships and client trust across Delhi-NCR.</div>
+        <div class="team-credentials">
+          <div class="credential">MBA Finance, ICFAI</div>
+          <div class="credential">17+ Years Experience</div>
+          <div class="credential">Banking & Forex</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="partners">
+  <div class="partners-inner">
+    <div class="partners-label">Authorized Partner With India's Leading Financial Institutions</div>
+    <div class="partners-row">
+      <div class="partner-name">HDFC Bank</div>
+      <div class="partner-name">ICICI Bank</div>
+      <div class="partner-name">Bank of Baroda</div>
+      <div class="partner-name">Axis Bank</div>
+      <div class="partner-name">Tata AIG</div>
+      <div class="partner-name">Birla Sun Life</div>
+      <div class="partner-name">LIC</div>
+      <div class="partner-name">Cigna</div>
+    </div>
+  </div>
+</section>
+
+<!-- INSIGHTS -->
+<section class="section insight">
+  <div class="insight-inner">
+    <div class="section-label">WPF Perspective</div>
+    <h2 class="insight-h2">Intelligence for the discerning investor.</h2>
+    <div class="insight-grid">
+      <div class="insight-card featured">
+        <div class="insight-tag">Market Perspective · Feb 2026</div>
+        <div class="insight-title">Interest Rate Expectations & What They Mean for Your Debt Portfolio in 2026</div>
+        <div class="insight-excerpt">With the RBI signalling a cautious easing cycle, duration plays are back in focus. We outline a three-tier strategy for debt allocation across short, medium, and long-term horizons for HNI investors.</div>
+        <div class="insight-date">By Amit Aggarwal · February 2026</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-tag">Insurance</div>
+        <div class="insight-title">Why Your D&O Policy Needs a Review Before FY2026 Closes</div>
+        <div class="insight-excerpt">Regulatory changes have altered the risk landscape for directors and officers across Indian corporations.</div>
+        <div class="insight-date">January 2026</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-tag">Investments</div>
+        <div class="insight-title">AIF Category III: Is It Right for Your Portfolio?</div>
+        <div class="insight-excerpt">We demystify Alternative Investment Funds and help you understand when they add genuine value beyond mutual funds.</div>
+        <div class="insight-date">December 2025</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-eyebrow">Begin the Conversation</div>
+  <h2 class="cta-h2">Your wealth deserves<br><em>deliberate attention.</em></h2>
+  <p class="cta-sub">Request a private consultation with our founders. No obligations — just an honest conversation about your financial goals.</p>
+  <div class="cta-form">
+    <input type="text" placeholder="Your name & phone number">
+    <button>Request Consultation</button>
+  </div>
+  <div class="cta-note">We respond within 4 hours · Absolute discretion guaranteed</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">WPF Capital</div>
+      <div class="footer-brand-sub">Private Wealth & Advisory</div>
+      <p class="footer-about">Founded in 2016, WPF Capital is Delhi-NCR's trusted private wealth advisory firm — serving entrepreneurs, professionals, and families with investment advisory, insurance, and capital solutions.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Services</div>
+      <a href="#">Investment Advisory</a>
+      <a href="#">Protection & Insurance</a>
+      <a href="#">Capital Solutions</a>
+      <a href="#">WPF Platform</a>
+      <a href="#">Forex Advisory</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Firm</div>
+      <a href="#">Philosophy</a>
+      <a href="#">Leadership</a>
+      <a href="#">WPF Perspective</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">SEBI Disclosure</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Offices</div>
+      <p>Janak Puri, New Delhi</p>
+      <p>M3M Market, Sec. 113, Gurugram</p>
+      <p>Sector-8, Rohini, Delhi</p>
+      <p style="margin-top:12px; color: var(--gold)">+91 99107 09583</p>
+      <p>amit@wpfcapital.in</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-legal">© 2026 WPF Capital. All rights reserved.</div>
+    <div class="footer-sebi">SEBI Registered · AMFI Registered Mutual Fund Distributor · Member: Bank of Baroda, HDFC, ICICI, Axis, RBL, LIC</div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Subtle parallax on hero
+  window.addEventListener('scroll', () => {
+    const hero = document.querySelector('.hero-content');
+    if (hero) hero.style.transform = `translateY(${window.scrollY * 0.15}px)`;
+  });
+
+  // Animate elements on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.service-card, .team-card, .pillar, .insight-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
