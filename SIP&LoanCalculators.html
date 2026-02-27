@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WPF Capital — Financial Calculators</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0A1628;--navy-mid:#122040;--gold:#C9A84C;--gold-light:#E2C97E;--cream:#F5F0E8;--off-white:#FAFAF8;--charcoal:#1C1C1E;--mid-gray:#6B6B6B;--light-gray:#D4D0C8}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--off-white);color:var(--charcoal);overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:24px 60px;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px)}
+.nav-logo{display:flex;flex-direction:column}
+.nav-logo-mark{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:3px;color:#fff;text-transform:uppercase}
+.nav-logo-sub{font-size:9px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-top:2px}
+.nav-links{display:flex;gap:40px;align-items:center}
+.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;transition:color 0.3s}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{border:1px solid var(--gold)!important;color:var(--gold)!important;padding:10px 22px;transition:all 0.3s!important}
+.nav-cta:hover{background:var(--gold)!important;color:var(--navy)!important}
+
+/* HERO */
+.hero{background:var(--navy);padding:140px 60px 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-20%;right:-5%;width:55vw;height:55vw;max-width:700px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.07) 0%,transparent 65%)}
+.hero-line{position:absolute;left:60px;top:0;bottom:0;width:1px;background:rgba(201,168,76,0.15)}
+.hero-inner{max-width:1200px;margin:0 auto;padding-left:40px;position:relative;z-index:2}
+.eyebrow{font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,5.5vw,72px);font-weight:300;color:#fff;line-height:1.05}
+.hero h1 em{font-style:italic;color:var(--gold-light)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.5);margin-top:20px;max-width:520px;line-height:1.7;font-weight:300}
+
+/* TAB NAV */
+.calc-nav{background:var(--navy);border-top:1px solid rgba(255,255,255,0.08);padding:0 100px;position:sticky;top:72px;z-index:90;display:flex}
+.c-tab{padding:20px 36px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.3s}
+.c-tab:hover{color:rgba(255,255,255,0.7)}
+.c-tab.active{color:var(--gold);border-color:var(--gold)}
+
+/* CALC WRAPPER */
+.calc-section{display:none;padding:80px 60px;background:var(--off-white)}
+.calc-section.active{display:block}
+.calc-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+
+/* LEFT PANEL — INPUTS */
+.calc-panel{background:#fff;border:1px solid var(--light-gray);padding:48px}
+.cp-title{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--navy);margin-bottom:8px;font-weight:300}
+.cp-sub{font-size:13px;color:var(--mid-gray);margin-bottom:36px;line-height:1.6}
+
+.field{margin-bottom:28px}
+.field-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.fl-text{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid-gray)}
+.fl-val{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy);font-weight:300}
+.fl-val span{font-size:13px;color:var(--gold)}
+input[type=range]{width:100%;-webkit-appearance:none;height:2px;background:var(--light-gray);outline:none;border-radius:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--navy);cursor:pointer;border:2px solid var(--gold);transition:all 0.2s}
+input[type=range]::-webkit-slider-thumb:hover{background:var(--gold);border-color:var(--navy)}
+.range-limits{display:flex;justify-content:space-between;font-size:10px;color:var(--light-gray);margin-top:6px;letter-spacing:1px}
+
+.btn-calc{width:100%;background:var(--navy);color:#fff;padding:18px;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.3s;margin-top:8px}
+.btn-calc:hover{background:var(--gold);color:var(--navy)}
+
+/* RIGHT PANEL — RESULTS */
+.result-panel{background:var(--navy);padding:48px;position:sticky;top:160px}
+.rp-title{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:32px}
+.result-main{margin-bottom:36px}
+.rm-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px}
+.rm-val{font-family:'Cormorant Garamond',serif;font-size:52px;color:#fff;font-weight:300;line-height:1}
+.rm-val span{font-size:24px;color:var(--gold)}
+.result-breakdown{display:flex;flex-direction:column;gap:0;margin-bottom:36px}
+.rb-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.07)}
+.rb-row:first-child{border-top:1px solid rgba(255,255,255,0.07)}
+.rb-label{font-size:12px;color:rgba(255,255,255,0.45);letter-spacing:0.5px}
+.rb-val{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;font-weight:300}
+.rb-val.gold{color:var(--gold-light)}
+
+/* CHART */
+.chart-wrap{margin-top:8px}
+.chart-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px}
+.bar-chart{display:flex;gap:3px;align-items:flex-end;height:100px}
+.bar{flex:1;transition:height 0.6s ease;position:relative;cursor:pointer}
+.bar-invested{background:rgba(255,255,255,0.15)}
+.bar-returns{background:var(--gold);opacity:0.7}
+.bar-tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:rgba(10,22,40,0.95);border:1px solid rgba(201,168,76,0.3);padding:6px 10px;font-size:10px;color:#fff;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 0.2s;z-index:10}
+.bar:hover .bar-tooltip{opacity:1}
+
+/* INFLATION TOGGLE */
+.inflation-note{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);padding:16px;margin-top:24px}
+.in-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.in-text{font-size:12px;line-height:1.6;color:rgba(255,255,255,0.5)}
+.in-adj{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold-light);margin-top:8px;font-weight:300}
+
+/* LOAN SPECIFIC */
+.amort-table{margin-top:36px;background:#fff;border:1px solid var(--light-gray);overflow:hidden}
+.at-header{background:var(--navy);display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:12px 20px}
+.ath{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.at-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:12px 20px;border-bottom:1px solid var(--light-gray);transition:background 0.2s}
+.at-row:hover{background:var(--cream)}
+.at-row:last-child{border-bottom:none}
+.atc{font-size:13px;color:var(--charcoal)}
+.atc.gold{color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:15px}
+.at-show-more{text-align:center;padding:16px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);cursor:pointer;border-top:1px solid var(--light-gray);transition:background 0.2s}
+.at-show-more:hover{background:var(--cream)}
+
+/* COMPARE TABLE */
+.compare-section{padding:60px;background:var(--cream)}
+.cs-inner{max-width:1200px;margin:0 auto}
+.cs-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.cs-label::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+.cs-h2{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--navy);margin-bottom:36px;font-weight:300}
+.comp-table{width:100%;border-collapse:collapse}
+.comp-table th{font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:14px 20px;text-align:left;background:var(--navy);color:rgba(255,255,255,0.5)}
+.comp-table th:first-child{color:var(--gold)}
+.comp-table td{padding:14px 20px;font-size:14px;border-bottom:1px solid var(--light-gray);color:var(--charcoal)}
+.comp-table tr:hover td{background:#fff}
+.comp-table td:first-child{font-weight:500;color:var(--navy);font-size:13px}
+.comp-table td.highlight{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--navy);font-weight:300}
+
+/* CTA */
+.cta-band{background:var(--navy);padding:80px 60px;display:flex;align-items:center;justify-content:space-between}
+.cb-text .cb-eye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.cb-text h2{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,44px);font-weight:300;color:#fff;line-height:1.2}
+.cb-text h2 em{font-style:italic;color:var(--gold-light)}
+.btn-gold{background:var(--gold);color:var(--navy);padding:18px 40px;font-size:12px;letter-spacing:2px;text-transform:uppercase;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.3s;font-family:'Inter',sans-serif;font-weight:500;white-space:nowrap}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px)}
+
+footer{background:var(--navy);color:rgba(255,255,255,0.5);padding:80px 60px 40px;border-top:1px solid rgba(255,255,255,0.06)}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:60px}
+.footer-brand-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;letter-spacing:3px;font-weight:600;margin-bottom:4px}
+.footer-brand-sub{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
+.footer-about{font-size:13px;line-height:1.7;max-width:280px}
+.footer-col-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.footer-col a,.footer-col p{display:block;font-size:13px;color:rgba(255,255,255,0.45);text-decoration:none;margin-bottom:10px;transition:color 0.3s;line-height:1.6}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:32px;display:flex;justify-content:space-between;align-items:center}
+.footer-legal{font-size:11px}
+.footer-sebi{font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">WPF Capital</div>
+    <div class="nav-logo-sub">Private Wealth & Advisory</div>
+  </div>
+  <div class="nav-links">
+    <a href="#">Philosophy</a>
+    <a href="#">Services</a>
+    <a href="#">Expertise</a>
+    <a href="#">Insights</a>
+    <a href="#" class="nav-cta">Request Consultation</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-line"></div>
+  <div class="hero-inner">
+    <div class="eyebrow">Financial Calculators</div>
+    <h1>Numbers that help you<br><em>make better decisions.</em></h1>
+    <p class="hero-sub">Use our SIP wealth calculator and loan EMI calculator to model your financial future — then speak to our founders about making it real.</p>
+  </div>
+</div>
+
+<div class="calc-nav">
+  <div class="c-tab active" data-calc="sip">SIP / Wealth Calculator</div>
+  <div class="c-tab" data-calc="loan">Loan EMI Calculator</div>
+</div>
+
+<!-- ======== SIP CALCULATOR ======== -->
+<div class="calc-section active" id="calc-sip">
+  <div class="calc-inner">
+    <div>
+      <div class="calc-panel">
+        <div class="cp-title">SIP Wealth Calculator</div>
+        <div class="cp-sub">Calculate how your systematic investment plan grows into wealth over time — with realistic return and inflation adjustments.</div>
+
+        <div class="field">
+          <div class="field-label">
+            <span class="fl-text">Monthly SIP Amount</span>
+            <span class="fl-val"><span>₹ </span><span id="sip-amt-val">25,000</span></span>
+          </div>
+          <input type="range" id="sip-amt" min="1000" max="500000" step="1000" value="25000">
+          <div class="range-limits"><span>₹1,000</span><span>₹5,00,000</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <span class="fl-text">Expected Annual Return</span>
+            <span class="fl-val"><span id="sip-ret-val">12</span><span> % p.a.</span></span>
+          </div>
+          <input type="range" id="sip-ret" min="4" max="24" step="0.5" value="12">
+          <div class="range-limits"><span>4%</span><span>24%</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <span class="fl-text">Investment Horizon</span>
+            <span class="fl-val"><span id="sip-yrs-val">15</span><span> Years</span></span>
+          </div>
+          <input type="range" id="sip-yrs" min="1" max="40" step="1" value="15">
+          <div class="range-limits"><span>1 Year</span><span>40 Years</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <span class="fl-text">Annual Step-Up (Optional)</span>
+            <span class="fl-val"><span id="sip-step-val">10</span><span> %</span></span>
+          </div>
+          <input type="range" id="sip-step" min="0" max="25" step="1" value="10">
+          <div class="range-limits"><span>0% (No step-up)</span><span>25%</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <span class="fl-text">Inflation Rate (for real value)</span>
+            <span class="fl-val"><span id="sip-inf-val">6</span><span> %</span></span>
+          </div>
+          <input type="range" id="sip-inf" min="3" max="10" step="0.5" value="6">
+          <div class="range-limits"><span>3%</span><span>10%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-panel">
+      <div class="rp-title">Your Wealth Projection</div>
+      <div class="result-main">
+        <div class="rm-label">Projected Corpus</div>
+        <div class="rm-val"><span>₹ </span><span id="sip-corpus">0</span></div>
+      </div>
+      <div class="result-breakdown">
+        <div class="rb-row"><span class="rb-label">Total Amount Invested</span><span class="rb-val" id="sip-invested">—</span></div>
+        <div class="rb-row"><span class="rb-label">Wealth Gained</span><span class="rb-val gold" id="sip-gains">—</span></div>
+        <div class="rb-row"><span class="rb-label">Wealth Multiple</span><span class="rb-val" id="sip-multiple">—</span></div>
+        <div class="rb-row"><span class="rb-label">CAGR</span><span class="rb-val" id="sip-cagr">—</span></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-label">Growth by Year</div>
+        <div class="bar-chart" id="sipBarChart"></div>
+      </div>
+      <div class="inflation-note">
+        <div class="in-title">Inflation-Adjusted Value</div>
+        <div class="in-text">Your corpus in today's purchasing power (after <span id="inf-pct">6</span>% annual inflation):</div>
+        <div class="in-adj">₹ <span id="sip-real">0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="compare-section">
+    <div class="cs-inner">
+      <div class="cs-label">Return Scenarios</div>
+      <h2 class="cs-h2">How returns shape your outcome.</h2>
+      <table class="comp-table" id="sipCompTable">
+        <thead><tr><th>Scenario</th><th>Return Rate</th><th>Corpus (15 Yrs)</th><th>Wealth Gained</th><th>Multiple</th></tr></thead>
+        <tbody id="sipCompBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ======== LOAN CALCULATOR ======== -->
+<div class="calc-section" id="calc-loan">
+  <div class="calc-inner">
+    <div>
+      <div class="calc-panel">
+        <div class="cp-title">Loan EMI Calculator</div>
+        <div class="cp-sub">Calculate your monthly EMI, total interest paid, and view a full amortisation schedule for any loan type.</div>
+
+        <div class="field">
+          <div class="field-label">
+            <span class="fl-text">Loan Type</span>
+          </div>
+          <select id="loan-type" style="width:100%;padding:12px 16px;border:1px solid var(--light-gray);background:var(--off-white);font-size:14px;font-family:'Inter',sans-serif;color:var(--charcoal);outline:none;cursor:pointer">
+            <option value="8.5">Home Loan (8.50% p.a.)</option>
+            <option value="9.25">Loan Against Property (9.25%)</option>
+            <option value="10.5">Personal Loan (10.50%)</option>
+            <option value="11.0">Business Loan (11.00%)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <span class="fl-text">Loan Amount</span>
+            <span class="fl-val"><span>₹ </span><span id="loan-amt-val">50,00,000</span></span>
+          </div>
+          <input type="range" id="loan-amt" min="100000" max="50000000" step="100000" value="5000000">
+          <div class="range-limits"><span>₹1 Lakh</span><span>₹5 Crore</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <span class="fl-text">Interest Rate</span>
+            <span class="fl-val"><span id="loan-rate-val">8.50</span><span> % p.a.</span></span>
+          </div>
+          <input type="range" id="loan-rate" min="6" max="24" step="0.05" value="8.5">
+          <div class="range-limits"><span>6%</span><span>24%</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">
+            <span class="fl-text">Loan Tenure</span>
+            <span class="fl-val"><span id="loan-ten-val">20</span><span> Years</span></span>
+          </div>
+          <input type="range" id="loan-ten" min="1" max="30" step="1" value="20">
+          <div class="range-limits"><span>1 Year</span><span>30 Years</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-panel">
+      <div class="rp-title">Your Loan Summary</div>
+      <div class="result-main">
+        <div class="rm-label">Monthly EMI</div>
+        <div class="rm-val"><span>₹ </span><span id="loan-emi">0</span></div>
+      </div>
+      <div class="result-breakdown">
+        <div class="rb-row"><span class="rb-label">Principal Amount</span><span class="rb-val" id="loan-principal">—</span></div>
+        <div class="rb-row"><span class="rb-label">Total Interest Payable</span><span class="rb-val gold" id="loan-interest">—</span></div>
+        <div class="rb-row"><span class="rb-label">Total Amount Payable</span><span class="rb-val" id="loan-total">—</span></div>
+        <div class="rb-row"><span class="rb-label">Interest to Principal Ratio</span><span class="rb-val" id="loan-ratio">—</span></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-label">Principal vs Interest Payable</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+          <div style="flex:1;position:relative;height:12px;background:rgba(255,255,255,0.1);border-radius:0">
+            <div id="loan-bar-p" style="height:100%;background:rgba(255,255,255,0.3);transition:width 0.6s;border-radius:0"></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:rgba(255,255,255,0.4)">
+          <span>■ Principal <span id="lbp-pct" style="color:rgba(255,255,255,0.6)">—</span></span>
+          <span style="color:var(--gold)">■ Interest <span id="lbi-pct" style="color:var(--gold-light)">—</span></span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+          <div style="flex:1;height:12px;background:rgba(201,168,76,0.15)">
+            <div id="loan-bar-i" style="height:100%;background:var(--gold);opacity:0.6;transition:width 0.6s"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AMORT TABLE -->
+  <div style="padding:0 60px 60px;max-width:1200px;margin:0 auto">
+    <div class="cs-label" style="margin-bottom:16px">Year-by-Year Amortisation Schedule</div>
+    <div class="amort-table">
+      <div class="at-header">
+        <div class="ath">Year</div>
+        <div class="ath">Principal Paid</div>
+        <div class="ath">Interest Paid</div>
+        <div class="ath">Balance</div>
+      </div>
+      <div id="amortBody"></div>
+      <div class="at-show-more" id="amortToggle" onclick="toggleAmort()">Show All Years ↓</div>
+    </div>
+  </div>
+
+  <!-- COMPARISON -->
+  <div class="compare-section">
+    <div class="cs-inner">
+      <div class="cs-label">Tenure Comparison</div>
+      <h2 class="cs-h2">How tenure affects your total cost.</h2>
+      <table class="comp-table" id="loanCompTable">
+        <thead><tr><th>Tenure</th><th>EMI</th><th>Total Interest</th><th>Total Payment</th><th>Interest Ratio</th></tr></thead>
+        <tbody id="loanCompBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="cta-band">
+  <div class="cb-text">
+    <div class="cb-eye">Ready to Act on the Numbers?</div>
+    <h2>These are projections.<br><em>We help you achieve them.</em></h2>
+  </div>
+  <a href="#" class="btn-gold">Request a Private Consultation</a>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">WPF Capital</div>
+      <div class="footer-brand-sub">Private Wealth & Advisory</div>
+      <p class="footer-about">Founded in 2016, WPF Capital is Delhi-NCR's trusted private wealth advisory firm — investment advisory, insurance, and capital solutions.</p>
+    </div>
+    <div class="footer-col"><div class="footer-col-title">Services</div><a href="#">Investment Advisory</a><a href="#">Protection & Insurance</a><a href="#">Capital Solutions</a><a href="#">WPF Platform</a></div>
+    <div class="footer-col"><div class="footer-col-title">Calculators</div><a href="#">SIP Calculator</a><a href="#">Loan EMI Calculator</a><a href="#">Insights</a><a href="#">Privacy Policy</a></div>
+    <div class="footer-col"><div class="footer-col-title">Offices</div><p>Janak Puri, New Delhi</p><p>Gurugram & Rohini</p><p style="margin-top:12px;color:var(--gold)">+91 99107 09583</p></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-legal">© 2026 WPF Capital. Calculators are for illustrative purposes only. Mutual Fund investments are subject to market risk.</div>
+    <div class="footer-sebi">SEBI Registered · AMFI ARN Holder</div>
+  </div>
+</footer>
+
+<script>
+const fmt = n => {
+  if(n>=10000000) return (n/10000000).toFixed(2)+' Cr';
+  if(n>=100000) return (n/100000).toFixed(2)+' L';
+  if(n>=1000) return (n/1000).toFixed(1)+' K';
+  return Math.round(n).toLocaleString('en-IN');
+};
+const fmtFull = n => Math.round(n).toLocaleString('en-IN');
+
+// ---- SIP ----
+function calcSIP(){
+  const monthly = +document.getElementById('sip-amt').value;
+  const rate = +document.getElementById('sip-ret').value / 100 / 12;
+  const yrs = +document.getElementById('sip-yrs').value;
+  const step = +document.getElementById('sip-step').value / 100;
+  const inf = +document.getElementById('sip-inf').value / 100;
+  const months = yrs * 12;
+
+  let corpus = 0, invested = 0, curMonthly = monthly;
+  const yearlyData = [];
+  for(let y=0;y<yrs;y++){
+    let yi=0,yc=0;
+    for(let m=0;m<12;m++){
+      corpus = (corpus + curMonthly) * (1 + rate);
+      invested += curMonthly; yi += curMonthly;
+    }
+    yc = corpus;
+    yearlyData.push({invested, corpus:yc, yr:y+1});
+    if(step>0) curMonthly *= (1+step);
+  }
+
+  const gains = corpus - invested;
+  const multiple = corpus / invested;
+  const realCorpus = corpus / Math.pow(1+inf, yrs);
+
+  document.getElementById('sip-corpus').textContent = fmt(corpus);
+  document.getElementById('sip-invested').textContent = '₹ '+fmt(invested);
+  document.getElementById('sip-gains').textContent = '₹ '+fmt(gains);
+  document.getElementById('sip-multiple').textContent = multiple.toFixed(1)+'x';
+  document.getElementById('sip-cagr').textContent = (Math.pow(corpus/invested,1/yrs)-1)*100 < 0 ? '—' : ((Math.pow(corpus/invested,1/yrs)-1)*100).toFixed(1)+'% p.a.';
+  document.getElementById('sip-real').textContent = fmt(realCorpus);
+  document.getElementById('inf-pct').textContent = document.getElementById('sip-inf').value;
+
+  // Bar chart — sample every N years
+  const chart = document.getElementById('sipBarChart');
+  const maxC = corpus;
+  const sampleEvery = Math.max(1, Math.floor(yrs/12));
+  const sampled = yearlyData.filter((_,i)=>(i+1)%sampleEvery===0 || i===yearlyData.length-1);
+  chart.innerHTML = sampled.map(d=>{
+    const ih = (d.invested/maxC)*90;
+    const rh = ((d.corpus-d.invested)/maxC)*90;
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+      <div class="bar bar-returns" style="height:${rh}px;width:100%;position:relative">
+        <div class="bar-tooltip">Yr ${d.yr}: ₹${fmt(d.corpus)}</div>
+      </div>
+      <div class="bar bar-invested" style="height:${ih}px;width:100%"></div>
+    </div>`;
+  }).join('');
+
+  // Comparison table
+  const scenarios=[{name:'Conservative',r:8},{name:'Moderate',r:10},{name:'Balanced',r:12},{name:'Aggressive',r:15},{name:'Optimistic',r:18}];
+  const baseMonthly = +document.getElementById('sip-amt').value;
+  const tbody = document.getElementById('sipCompBody');
+  tbody.innerHTML = scenarios.map(s=>{
+    const mr = s.r/100/12;
+    let c=0,inv=0,cm=baseMonthly;
+    for(let y=0;y<15;y++){
+      for(let m=0;m<12;m++){c=(c+cm)*(1+mr);inv+=cm;}
+      cm*=(1+step);
+    }
+    const g=c-inv;
+    const mult=c/inv;
+    const isActive = Math.abs(s.r - +document.getElementById('sip-ret').value) < 1.5;
+    return `<tr style="${isActive?'background:rgba(201,168,76,0.05);':''}">
+      <td>${s.name}</td>
+      <td>${s.r}% p.a.</td>
+      <td class="highlight">₹ ${fmt(c)}</td>
+      <td>₹ ${fmt(g)}</td>
+      <td>${mult.toFixed(1)}x</td>
+    </tr>`;
+  }).join('');
+}
+
+// ---- LOAN ----
+let showAllAmort = false;
+function calcLoan(){
+  const P = +document.getElementById('loan-amt').value;
+  const annualR = +document.getElementById('loan-rate').value;
+  const r = annualR/100/12;
+  const n = +document.getElementById('loan-ten').value * 12;
+  const emi = P * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1);
+  const totalPay = emi * n;
+  const totalInt = totalPay - P;
+  const ratio = totalInt/P;
+  const pPct = (P/totalPay*100).toFixed(0);
+  const iPct = (totalInt/totalPay*100).toFixed(0);
+
+  document.getElementById('loan-emi').textContent = fmtFull(Math.round(emi));
+  document.getElementById('loan-principal').textContent = '₹ '+fmt(P);
+  document.getElementById('loan-interest').textContent = '₹ '+fmt(totalInt);
+  document.getElementById('loan-total').textContent = '₹ '+fmt(totalPay);
+  document.getElementById('loan-ratio').textContent = ratio.toFixed(2)+'x';
+  document.getElementById('loan-bar-p').style.width = pPct+'%';
+  document.getElementById('loan-bar-i').style.width = iPct+'%';
+  document.getElementById('lbp-pct').textContent = pPct+'%';
+  document.getElementById('lbi-pct').textContent = iPct+'%';
+
+  // Amortisation
+  const yrs = +document.getElementById('loan-ten').value;
+  let bal = P;
+  const amortRows = [];
+  for(let y=1;y<=yrs;y++){
+    let yPrin=0, yInt=0;
+    for(let m=0;m<12;m++){
+      const intM = bal*r;
+      const prinM = emi-intM;
+      yInt+=intM; yPrin+=prinM; bal-=prinM;
+    }
+    amortRows.push({yr:y,prin:yPrin,int:yInt,bal:Math.max(0,bal)});
+  }
+  const body = document.getElementById('amortBody');
+  const limit = showAllAmort ? amortRows.length : Math.min(5,amortRows.length);
+  body.innerHTML = amortRows.slice(0,limit).map(r=>`
+    <div class="at-row">
+      <div class="atc">Year ${r.yr}</div>
+      <div class="atc">₹ ${fmt(r.prin)}</div>
+      <div class="atc gold">₹ ${fmt(r.int)}</div>
+      <div class="atc">₹ ${fmt(r.bal)}</div>
+    </div>`).join('');
+  const tog = document.getElementById('amortToggle');
+  if(yrs<=5){tog.style.display='none';}
+  else{tog.style.display='block';tog.textContent=showAllAmort?'Show Less ↑':'Show All '+yrs+' Years ↓';}
+
+  // Tenure comparison
+  const tenures=[5,10,15,20,25,30].filter(t=>t<=yrs+5);
+  const cb = document.getElementById('loanCompBody');
+  cb.innerHTML = tenures.map(t=>{
+    const nm = t*12;
+    const e = P*r*Math.pow(1+r,nm)/(Math.pow(1+r,nm)-1);
+    const tp = e*nm; const ti=tp-P;
+    const isActive = t === +document.getElementById('loan-ten').value;
+    return `<tr style="${isActive?'background:rgba(201,168,76,0.05);':''}">
+      <td>${t} Years</td>
+      <td class="highlight">₹ ${fmtFull(Math.round(e))}</td>
+      <td>₹ ${fmt(ti)}</td>
+      <td>₹ ${fmt(tp)}</td>
+      <td>${(ti/P).toFixed(2)}x</td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleAmort(){showAllAmort=!showAllAmort;calcLoan();}
+
+// DISPLAY HELPERS
+['sip-amt','sip-ret','sip-yrs','sip-step','sip-inf'].forEach(id=>{
+  const el = document.getElementById(id);
+  el.addEventListener('input',()=>{
+    if(id==='sip-amt') document.getElementById('sip-amt-val').textContent = (+el.value).toLocaleString('en-IN');
+    if(id==='sip-ret') document.getElementById('sip-ret-val').textContent = el.value;
+    if(id==='sip-yrs') document.getElementById('sip-yrs-val').textContent = el.value;
+    if(id==='sip-step') document.getElementById('sip-step-val').textContent = el.value;
+    if(id==='sip-inf') document.getElementById('sip-inf-val').textContent = el.value;
+    calcSIP();
+  });
+});
+['loan-amt','loan-rate','loan-ten'].forEach(id=>{
+  const el = document.getElementById(id);
+  el.addEventListener('input',()=>{
+    if(id==='loan-amt') document.getElementById('loan-amt-val').textContent = (+el.value).toLocaleString('en-IN');
+    if(id==='loan-rate') document.getElementById('loan-rate-val').textContent = (+el.value).toFixed(2);
+    if(id==='loan-ten') document.getElementById('loan-ten-val').textContent = el.value;
+    calcLoan();
+  });
+});
+document.getElementById('loan-type').addEventListener('change',function(){
+  const r = +this.value;
+  document.getElementById('loan-rate').value = r;
+  document.getElementById('loan-rate-val').textContent = r.toFixed(2);
+  calcLoan();
+});
+
+// TABS
+document.querySelectorAll('.c-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.c-tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.calc-section').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('calc-'+t.dataset.calc).classList.add('active');
+    window.scrollTo({top:200,behavior:'smooth'});
+  });
+});
+
+calcSIP(); calcLoan();
+</script>
+</body>
+</html>
