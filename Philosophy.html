@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WPF Capital — Philosophy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0A1628;--navy-mid:#122040;--gold:#C9A84C;--gold-light:#E2C97E;
+  --cream:#F5F0E8;--off-white:#FAFAF8;--charcoal:#1C1C1E;
+  --mid-gray:#6B6B6B;--light-gray:#D4D0C8;--sage:#8A9E8B;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--off-white);color:var(--charcoal);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:24px 60px;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px)}
+.nav-logo{display:flex;flex-direction:column}
+.nav-logo-mark{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:3px;color:#fff;text-transform:uppercase}
+.nav-logo-sub{font-size:9px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-top:2px}
+.nav-links{display:flex;gap:40px;align-items:center}
+.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;transition:color 0.3s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{background:transparent!important;border:1px solid var(--gold);color:var(--gold)!important;padding:10px 22px;font-size:11px!important;letter-spacing:1.5px;transition:all 0.3s!important}
+.nav-cta:hover{background:var(--gold)!important;color:var(--navy)!important}
+
+/* PAGE HERO */
+.page-hero{height:55vh;min-height:480px;background:var(--navy);display:flex;align-items:flex-end;padding:0 60px 80px;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;top:-30%;right:-5%;width:60vw;height:60vw;max-width:800px;max-height:800px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 65%)}
+.page-hero-line{position:absolute;left:60px;top:0;bottom:0;width:1px;background:rgba(201,168,76,0.15)}
+.page-hero-content{z-index:2;padding-left:40px}
+.page-eyebrow{font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.page-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+.page-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,5.5vw,80px);font-weight:300;color:#fff;line-height:1.05}
+.page-h1 em{font-style:italic;color:var(--gold-light)}
+.page-hero-sub{font-size:15px;color:rgba(255,255,255,0.5);margin-top:20px;max-width:500px;line-height:1.7;font-weight:300}
+
+/* SECTIONS */
+.section{padding:100px 60px}
+.section-inner{max-width:1200px;margin:0 auto}
+.section-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.section-label::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+
+/* MANIFESTO */
+.manifesto{background:var(--cream)}
+.manifesto-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:80px;align-items:start}
+.manifesto-nav{position:sticky;top:120px}
+.manifesto-nav-item{padding:16px 0;border-bottom:1px solid var(--light-gray);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--mid-gray);cursor:pointer;transition:all 0.3s;display:flex;gap:14px;align-items:center}
+.manifesto-nav-item::before{content:'';display:block;width:20px;height:1px;background:var(--light-gray);transition:all 0.3s}
+.manifesto-nav-item:hover,.manifesto-nav-item.active{color:var(--navy)}
+.manifesto-nav-item:hover::before,.manifesto-nav-item.active::before{background:var(--gold);width:32px}
+.manifesto-content{}
+.manifesto-block{margin-bottom:64px;opacity:0;transform:translateY(20px);transition:all 0.6s}
+.manifesto-block.visible{opacity:1;transform:translateY(0)}
+.mb-num{font-family:'Cormorant Garamond',serif;font-size:80px;color:rgba(201,168,76,0.12);line-height:1;margin-bottom:-20px;font-weight:300}
+.mb-title{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--navy);margin-bottom:20px;font-weight:300}
+.mb-title em{font-style:italic;color:var(--gold)}
+.mb-body{font-size:15px;line-height:1.85;color:var(--mid-gray);margin-bottom:16px}
+.mb-pull{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--navy);border-left:2px solid var(--gold);padding-left:24px;margin:32px 0;line-height:1.5}
+
+/* FOUNDERS */
+.founders{background:var(--navy)}
+.founders-inner{max-width:1200px;margin:0 auto}
+.founders-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,52px);font-weight:300;color:#fff;margin-bottom:64px;line-height:1.2}
+.founders-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.founder-card{background:rgba(255,255,255,0.04);padding:56px 48px;position:relative;overflow:hidden;transition:background 0.4s}
+.founder-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);transform:scaleX(0);transition:transform 0.5s;transform-origin:left}
+.founder-card:hover::before{transform:scaleX(1)}
+.founder-card:hover{background:rgba(201,168,76,0.05)}
+.founder-initial{width:80px;height:80px;border:1px solid rgba(201,168,76,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold);margin-bottom:32px;font-weight:300}
+.founder-name{font-family:'Cormorant Garamond',serif;font-size:32px;color:#fff;font-weight:300;margin-bottom:4px}
+.founder-role{font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:28px}
+.founder-bio{font-size:14px;line-height:1.85;color:rgba(255,255,255,0.55);margin-bottom:32px}
+.founder-stats{display:flex;gap:32px}
+.fstat-num{font-family:'Cormorant Garamond',serif;font-size:32px;color:#fff;font-weight:300}
+.fstat-num span{color:var(--gold);font-size:18px}
+.fstat-label{font-size:10px;letter-spacing:1.5px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-top:4px}
+
+/* VALUES */
+.values{background:var(--off-white)}
+.values-inner{max-width:1200px;margin:0 auto}
+.values-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,52px);font-weight:300;color:var(--navy);margin-bottom:64px;line-height:1.2}
+.values-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.value-card{background:var(--cream);padding:48px 36px;border-bottom:3px solid transparent;transition:all 0.4s;cursor:default}
+.value-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.07)}
+.value-icon{font-family:'Cormorant Garamond',serif;font-size:48px;color:rgba(201,168,76,0.25);margin-bottom:24px;font-weight:300;line-height:1}
+.value-title{font-size:16px;font-weight:500;color:var(--navy);margin-bottom:14px;letter-spacing:0.5px}
+.value-desc{font-size:13px;line-height:1.75;color:var(--mid-gray)}
+
+/* APPROACH */
+.approach{background:var(--cream)}
+.approach-inner{max-width:1200px;margin:0 auto}
+.approach-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,48px);font-weight:300;color:var(--navy);margin-bottom:64px;line-height:1.2}
+.approach-steps{display:flex;flex-direction:column;gap:0}
+.approach-step{display:grid;grid-template-columns:80px 1fr 1fr;gap:40px;align-items:center;padding:40px 0;border-bottom:1px solid var(--light-gray);transition:all 0.3s}
+.approach-step:first-child{border-top:1px solid var(--light-gray)}
+.approach-step:hover .step-num{color:var(--gold)}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:48px;color:var(--light-gray);font-weight:300;transition:color 0.4s;line-height:1}
+.step-title{font-size:20px;font-weight:500;color:var(--navy)}
+.step-sub{font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-top:6px}
+.step-desc{font-size:14px;line-height:1.75;color:var(--mid-gray)}
+
+/* DIFFERENCE */
+.difference{background:var(--navy);padding:100px 60px}
+.diff-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.diff-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,52px);font-weight:300;color:#fff;line-height:1.2;margin-bottom:24px}
+.diff-h2 em{font-style:italic;color:var(--gold)}
+.diff-sub{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.5)}
+.diff-table{border-collapse:collapse;width:100%}
+.diff-table th{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);padding:0 0 16px;text-align:left;border-bottom:1px solid rgba(201,168,76,0.3)}
+.diff-table th:last-child{color:rgba(255,255,255,0.3)}
+.diff-table td{padding:16px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);vertical-align:top}
+.diff-table td:first-child{color:rgba(255,255,255,0.4);font-size:11px;letter-spacing:1px;padding-right:20px}
+.diff-table td.yes{color:#8A9E8B}
+.diff-table td.no{color:rgba(255,255,255,0.2)}
+
+/* CTA STRIP */
+.cta-strip{background:var(--gold);padding:80px 60px;display:flex;align-items:center;justify-content:space-between}
+.cta-strip-text{}
+.strip-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(10,22,40,0.6);margin-bottom:12px}
+.strip-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,44px);font-weight:300;color:var(--navy);line-height:1.2}
+.strip-h2 em{font-style:italic}
+.btn-dark{background:var(--navy);color:#fff;padding:18px 40px;font-size:12px;letter-spacing:2px;text-transform:uppercase;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.3s;font-family:'Inter',sans-serif;white-space:nowrap}
+.btn-dark:hover{background:var(--navy-mid);transform:translateY(-2px)}
+
+/* FOOTER */
+footer{background:var(--navy);color:rgba(255,255,255,0.5);padding:80px 60px 40px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:60px}
+.footer-brand-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;letter-spacing:3px;font-weight:600;margin-bottom:4px}
+.footer-brand-sub{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
+.footer-about{font-size:13px;line-height:1.7;max-width:280px}
+.footer-col-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.footer-col a,.footer-col p{display:block;font-size:13px;color:rgba(255,255,255,0.45);text-decoration:none;margin-bottom:10px;transition:color 0.3s;line-height:1.6}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:32px;display:flex;justify-content:space-between;align-items:center}
+.footer-legal{font-size:11px}
+.footer-sebi{font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">WPF Capital</div>
+    <div class="nav-logo-sub">Private Wealth & Advisory</div>
+  </div>
+  <div class="nav-links">
+    <a href="#" class="active">Philosophy</a>
+    <a href="#">Services</a>
+    <a href="#">Expertise</a>
+    <a href="#">Insights</a>
+    <a href="#" class="nav-cta">Request Consultation</a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-line"></div>
+  <div class="page-hero-content">
+    <div class="page-eyebrow">Our Philosophy</div>
+    <h1 class="page-h1">Not a distributor.<br>A wealth <em>architecture</em> practice.</h1>
+    <p class="page-hero-sub">Nine years of building something different — an advisory firm where the founders still answer your call.</p>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="section manifesto">
+  <div class="manifesto-inner">
+    <div class="manifesto-nav">
+      <div class="section-label" style="margin-bottom:32px">What We Believe</div>
+      <div class="manifesto-nav-item active" data-target="m1">Independence</div>
+      <div class="manifesto-nav-item" data-target="m2">Alignment</div>
+      <div class="manifesto-nav-item" data-target="m3">Completeness</div>
+      <div class="manifesto-nav-item" data-target="m4">Discretion</div>
+      <div class="manifesto-nav-item" data-target="m5">Longevity</div>
+    </div>
+    <div class="manifesto-content">
+      <div class="manifesto-block visible" id="m1">
+        <div class="mb-num">01</div>
+        <h3 class="mb-title">We answer to <em>you alone.</em></h3>
+        <p class="mb-body">In an industry where most advisors are compensated to push specific products, independence is not a feature — it is the entire foundation. WPF Capital is not beholden to any AMC, insurance company, or bank. We are not required to meet a sales target. We are not incentivised by commissions that conflict with your interest.</p>
+        <p class="mb-body">When we recommend a product, it is because it serves your financial architecture — not our quarterly review. This independence is what makes our advice worth having.</p>
+        <div class="mb-pull">"The best financial advisor is one who has nothing to gain from telling you something different from what they would do with their own money."</div>
+      </div>
+      <div class="manifesto-block" id="m2">
+        <div class="mb-num">02</div>
+        <h3 class="mb-title">When you grow, <em>we grow.</em></h3>
+        <p class="mb-body">Our business model is built on relationship depth, not transactional volume. We have clients who have been with us since 2016 — not because they are locked in, but because the advice has been consistently worth following.</p>
+        <p class="mb-body">True alignment means we think about your portfolio the way you think about your business — as a long-term system to be optimised, not a short-term trade to be executed. Our success metric is your financial wellbeing, measured over decades, not quarters.</p>
+        <div class="mb-pull">"We don't just manage wealth. We protect the story behind it — the years of work, the risks taken, the family it will sustain."</div>
+      </div>
+      <div class="manifesto-block" id="m3">
+        <div class="mb-num">03</div>
+        <h3 class="mb-title">Wealth cannot be <em>managed in silos.</em></h3>
+        <p class="mb-body">A financial plan that optimises investments while ignoring insurance is incomplete. A protection strategy that doesn't account for capital needs is incomplete. Most advisory relationships are, by their nature, partial.</p>
+        <p class="mb-body">WPF Capital was built to be different. We handle investments, protection, and capital under one roof — with one unified view of your financial life. This means no coordination gaps, no conflicting advice from different advisors, no blind spots.</p>
+        <div class="mb-pull">"Completeness is not a luxury. For serious wealth, it is a necessity."</div>
+      </div>
+      <div class="manifesto-block" id="m4">
+        <div class="mb-num">04</div>
+        <h3 class="mb-title">Your financial life <em>is private.</em></h3>
+        <p class="mb-body">We operate with the confidentiality standards of a private family office. Your investment strategy, your insurance structures, your loan requirements — none of this leaves our offices without your explicit consent.</p>
+        <p class="mb-body">We do not share client data with third-party vendors. We do not discuss client portfolios. We do not use your relationship with us as a reference without asking. Discretion is not a policy — it is a professional obligation we take seriously.</p>
+      </div>
+      <div class="manifesto-block" id="m5">
+        <div class="mb-num">05</div>
+        <h3 class="mb-title">We build for <em>generations, not years.</em></h3>
+        <p class="mb-body">The families we serve are not thinking about next year's returns. They are thinking about their children's education, their parents' security, their business succession, their philanthropic legacy.</p>
+        <p class="mb-body">Our advisory practice is structured to think at this timescale — to help you build financial structures that outlast market cycles, personal circumstances, and even, eventually, you. This is what we mean by wealth architecture.</p>
+        <div class="mb-pull">"A great financial advisor doesn't just make you richer. They help you think about money the way the genuinely wealthy do — as a tool for living well, giving well, and leaving well."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDERS -->
+<section class="section founders">
+  <div class="founders-inner">
+    <div class="section-label" style="color:var(--gold)">The People Behind The Practice</div>
+    <h2 class="founders-h2">Founded by practitioners.<br>Run by people who care about outcomes.</h2>
+    <div class="founders-grid">
+      <div class="founder-card fade-up">
+        <div class="founder-initial">AA</div>
+        <div class="founder-name">Amit Aggarwal</div>
+        <div class="founder-role">Founder & Partner</div>
+        <div class="founder-bio">Amit holds an MBA in Finance from ICFAI Hyderabad. Before founding WPF Group in 2016, he spent 17 years across wealth management, insurance, fund raising, financial management, and corporate finance with organisations across industries. That breadth of experience is what allows him to bring a genuinely holistic lens to client portfolios — one that sees the business, the family, and the investment portfolio as one interconnected system.<br><br>Amit leads investment advisory and portfolio strategy at WPF Capital. Clients describe him as direct, prepared, and always reachable.</div>
+        <div class="founder-stats">
+          <div><div class="fstat-num">17<span>+</span></div><div class="fstat-label">Years Experience</div></div>
+          <div><div class="fstat-num">2016</div><div class="fstat-label">Founded WPF</div></div>
+        </div>
+      </div>
+      <div class="founder-card fade-up" style="transition-delay:0.15s">
+        <div class="founder-initial">YS</div>
+        <div class="founder-name">Yogesh Sharma</div>
+        <div class="founder-role">Partner</div>
+        <div class="founder-bio">Yogesh is an MBA Finance from ICFAI Hyderabad with 17 years of deep expertise across wealth management, fund raising, insurance, banking, and forex. He joined WPF Group in 2017 and has been instrumental in building the firm's institutional relationships with banks, AMCs, and insurance partners — relationships that translate directly into better products, better pricing, and better outcomes for clients.<br><br>Yogesh leads insurance advisory, capital solutions, and banking relationships at WPF Capital. He is known for his methodical thinking and his ability to structure complex financial solutions with clarity.</div>
+        <div class="founder-stats">
+          <div><div class="fstat-num">17<span>+</span></div><div class="fstat-label">Years Experience</div></div>
+          <div><div class="fstat-num">2017</div><div class="fstat-label">Joined WPF</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="section values">
+  <div class="values-inner">
+    <div class="section-label">What Guides Us</div>
+    <h2 class="values-h2">Four values. Non-negotiable.<br>Every day.</h2>
+    <div class="values-grid">
+      <div class="value-card fade-up">
+        <div class="value-icon">I</div>
+        <div class="value-title">Independence</div>
+        <div class="value-desc">Our advice is never shaped by product quotas, commissions, or institutional pressure. Your interest is the only interest we serve.</div>
+      </div>
+      <div class="value-card fade-up" style="transition-delay:0.1s">
+        <div class="value-icon">T</div>
+        <div class="value-title">Trust</div>
+        <div class="value-desc">Nine years of relationships built on keeping promises. We say what we mean, and we mean what we say. No fine print.</div>
+      </div>
+      <div class="value-card fade-up" style="transition-delay:0.2s">
+        <div class="value-icon">P</div>
+        <div class="value-title">Precision</div>
+        <div class="value-desc">Every recommendation is backed by rigorous analysis. We don't guess. We don't follow trends blindly. We think, then act.</div>
+      </div>
+      <div class="value-card fade-up" style="transition-delay:0.3s">
+        <div class="value-icon">L</div>
+        <div class="value-title">Longevity</div>
+        <div class="value-desc">We build for the long arc — your retirement, your children's future, your legacy. Not for this quarter's performance report.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section class="section approach">
+  <div class="approach-inner">
+    <div class="section-label">Our Process</div>
+    <h2 class="approach-h2">How we build a wealth architecture<br>from the first conversation.</h2>
+    <div class="approach-steps">
+      <div class="approach-step fade-up">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-title">The Discovery Conversation</div>
+          <div class="step-sub">Understanding You</div>
+        </div>
+        <div class="step-desc">Before we recommend anything, we listen. We want to understand your financial life in full — your income, your obligations, your goals, your fears, your timeline, and your relationship with risk. This isn't a form. It's a conversation, usually over 90 minutes, with a founder.</div>
+      </div>
+      <div class="approach-step fade-up">
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-title">The Financial Audit</div>
+          <div class="step-sub">Mapping What Exists</div>
+        </div>
+        <div class="step-desc">We review everything — existing investments, insurance policies, loans, real estate exposure, tax liability, and estate structures. Most clients discover inefficiencies, overlaps, or gaps they were unaware of. This audit is where WPF adds its most immediate value.</div>
+      </div>
+      <div class="approach-step fade-up">
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-title">The Architecture Blueprint</div>
+          <div class="step-sub">Designing Your Plan</div>
+        </div>
+        <div class="step-desc">We present a unified financial architecture — investment strategy, protection structure, and capital plan — designed specifically for your situation. This isn't a template. It is built from scratch around your goals, your risk profile, and your life stage.</div>
+      </div>
+      <div class="approach-step fade-up">
+        <div class="step-num">04</div>
+        <div>
+          <div class="step-title">Deliberate Implementation</div>
+          <div class="step-sub">Building With Care</div>
+        </div>
+        <div class="step-desc">We implement with precision — choosing the right products, the right timing, and the right structure. Nothing is rushed. We use our network of bank and AMC partnerships to access institutional-grade terms unavailable through retail channels.</div>
+      </div>
+      <div class="approach-step fade-up">
+        <div class="step-num">05</div>
+        <div>
+          <div class="step-title">Ongoing Stewardship</div>
+          <div class="step-sub">The Long Relationship</div>
+        </div>
+        <div class="step-desc">Markets change. Life changes. Your plan evolves with you. We conduct structured portfolio reviews, provide proactive market commentary, and are available for unscheduled conversations when circumstances demand it. This is the relationship — not just the transaction.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFFERENCE TABLE -->
+<section class="difference">
+  <div class="diff-inner">
+    <div>
+      <div class="section-label" style="color:var(--gold)">Why WPF</div>
+      <h2 class="diff-h2">The <em>honest</em> difference between us and most financial advisors.</h2>
+      <p class="diff-sub">We're not asking you to take our word for it. Here is what separates a genuine wealth advisory practice from a product distribution channel.</p>
+    </div>
+    <div>
+      <table class="diff-table">
+        <thead>
+          <tr>
+            <th style="width:40%">What matters</th>
+            <th style="width:30%">WPF Capital</th>
+            <th style="width:30%">Typical Advisor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Product independence</td><td class="yes">✦ Full</td><td class="no">Partial or none</td></tr>
+          <tr><td>Founder accessibility</td><td class="yes">✦ Always</td><td class="no">Rarely</td></tr>
+          <tr><td>Holistic view (invest + protect + capital)</td><td class="yes">✦ Unified</td><td class="no">Siloed</td></tr>
+          <tr><td>Financial audit before advice</td><td class="yes">✦ Every client</td><td class="no">Uncommon</td></tr>
+          <tr><td>Written financial architecture</td><td class="yes">✦ Documented</td><td class="no">Verbal only</td></tr>
+          <tr><td>Ongoing review cadence</td><td class="yes">✦ Structured</td><td class="no">Ad hoc</td></tr>
+          <tr><td>Access to PMS / AIF</td><td class="yes">✦ Full access</td><td class="no">Limited</td></tr>
+          <tr><td>Business & corporate advisory</td><td class="yes">✦ Included</td><td class="no">Unavailable</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<div class="cta-strip">
+  <div class="cta-strip-text">
+    <div class="strip-eyebrow">Begin Your Wealth Journey</div>
+    <h2 class="strip-h2">The first conversation is<br><em>always ours to offer.</em></h2>
+  </div>
+  <a href="#" class="btn-dark">Request a Private Consultation</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">WPF Capital</div>
+      <div class="footer-brand-sub">Private Wealth & Advisory</div>
+      <p class="footer-about">Founded in 2016, WPF Capital is Delhi-NCR's trusted private wealth advisory firm — serving entrepreneurs, professionals, and families with investment advisory, insurance, and capital solutions.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Services</div>
+      <a href="#">Investment Advisory</a>
+      <a href="#">Protection & Insurance</a>
+      <a href="#">Capital Solutions</a>
+      <a href="#">WPF Platform</a>
+      <a href="#">Forex Advisory</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Firm</div>
+      <a href="#">Philosophy</a>
+      <a href="#">Leadership</a>
+      <a href="#">WPF Perspective</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Offices</div>
+      <p>Janak Puri, New Delhi</p>
+      <p>M3M Market, Sec. 113, Gurugram</p>
+      <p>Sector-8, Rohini, Delhi</p>
+      <p style="margin-top:12px;color:var(--gold)">+91 99107 09583</p>
+      <p>amit@wpfcapital.in</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-legal">© 2026 WPF Capital. All rights reserved.</div>
+    <div class="footer-sebi">SEBI Registered · AMFI Registered Mutual Fund Distributor</div>
+  </div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('visible'); }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.fade-up,.manifesto-block').forEach(el=>obs.observe(el));
+
+// Manifesto nav
+document.querySelectorAll('.manifesto-nav-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    document.querySelectorAll('.manifesto-nav-item').forEach(i=>i.classList.remove('active'));
+    document.querySelectorAll('.manifesto-block').forEach(b=>b.classList.remove('visible'));
+    item.classList.add('active');
+    const target = document.getElementById(item.dataset.target);
+    if(target){ target.classList.add('visible'); target.scrollIntoView({behavior:'smooth',block:'center'}); }
+  });
+});
+</script>
+</body>
+</html>
