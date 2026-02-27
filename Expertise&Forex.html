@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WPF Capital — Expertise & Forex</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0A1628;--navy-mid:#122040;--gold:#C9A84C;--gold-light:#E2C97E;--cream:#F5F0E8;--off-white:#FAFAF8;--charcoal:#1C1C1E;--mid-gray:#6B6B6B;--light-gray:#D4D0C8}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--off-white);color:var(--charcoal);overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:24px 60px;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px)}
+.nav-logo{display:flex;flex-direction:column}
+.nav-logo-mark{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:3px;color:#fff;text-transform:uppercase}
+.nav-logo-sub{font-size:9px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-top:2px}
+.nav-links{display:flex;gap:40px;align-items:center}
+.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;transition:color 0.3s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{border:1px solid var(--gold)!important;color:var(--gold)!important;padding:10px 22px;transition:all 0.3s!important}
+.nav-cta:hover{background:var(--gold)!important;color:var(--navy)!important}
+.page-switcher{position:fixed;bottom:32px;right:32px;z-index:200;display:flex;gap:12px}
+.psw-btn{padding:12px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.3s;font-family:'Inter',sans-serif}
+.psw-btn.active{background:var(--gold);color:var(--navy);font-weight:500}
+.psw-btn:not(.active){background:var(--navy);color:rgba(255,255,255,0.6)}
+.psw-btn:hover:not(.active){background:var(--navy-mid);color:#fff}
+.page{display:none}.page.active{display:block}
+
+/* SHARED */
+.page-hero{height:55vh;min-height:460px;background:var(--navy);display:flex;align-items:flex-end;padding:0 60px 80px;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;top:-20%;right:-5%;width:55vw;height:55vw;max-width:700px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.07) 0%,transparent 65%)}
+.hero-line{position:absolute;left:60px;top:0;bottom:0;width:1px;background:rgba(201,168,76,0.15)}
+.hero-content{z-index:2;padding-left:40px}
+.eyebrow{font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+.page-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,5.5vw,76px);font-weight:300;color:#fff;line-height:1.05}
+.page-h1 em{font-style:italic;color:var(--gold-light)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.5);margin-top:20px;max-width:520px;line-height:1.7;font-weight:300}
+.sec{padding:100px 60px}
+.sec-inner{max-width:1200px;margin:0 auto}
+.sec-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.sec-label::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+.sec-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,52px);font-weight:300;color:var(--navy);line-height:1.15;margin-bottom:20px}
+.sec-h2 em{font-style:italic;color:var(--gold)}
+.sec-h2-w{color:#fff}
+.sec-sub{font-size:15px;line-height:1.8;color:var(--mid-gray);max-width:620px;margin-bottom:56px;font-weight:300}
+.fade-up{opacity:0;transform:translateY(24px);transition:opacity 0.6s,transform 0.6s}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* ====== EXPERTISE PAGE ====== */
+/* STATS BAND */
+.stats-band{background:var(--gold);padding:48px 60px}
+.sb-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-left:1px solid rgba(10,22,40,0.15)}
+.sb-stat{padding:0 40px;border-right:1px solid rgba(10,22,40,0.15)}
+.sb-num{font-family:'Cormorant Garamond',serif;font-size:48px;color:var(--navy);font-weight:300;line-height:1}
+.sb-num span{font-size:24px}
+.sb-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(10,22,40,0.6);margin-top:6px}
+
+/* CREDENTIALS */
+.credentials{background:var(--cream)}
+.cred-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.cred-body p{font-size:14px;line-height:1.85;color:var(--mid-gray);margin-bottom:16px}
+.cred-pull{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--navy);border-left:2px solid var(--gold);padding-left:24px;margin:28px 0;line-height:1.5}
+.cred-list{display:flex;flex-direction:column;gap:0}
+.cred-item{padding:20px 0;border-bottom:1px solid var(--light-gray);display:grid;grid-template-columns:32px 1fr;gap:16px;align-items:start}
+.cred-item:first-child{border-top:1px solid var(--light-gray)}
+.ci-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);margin-top:6px}
+.ci-title{font-size:14px;font-weight:500;color:var(--navy);margin-bottom:4px}
+.ci-sub{font-size:12px;color:var(--mid-gray);letter-spacing:0.5px}
+
+/* AMC PARTNERS */
+.amc-section{background:var(--navy)}
+.amc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:48px}
+.amc-card{background:rgba(255,255,255,0.04);padding:32px;text-align:center;transition:all 0.3s;cursor:default}
+.amc-card:hover{background:rgba(201,168,76,0.07)}
+.amc-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;font-weight:300;margin-bottom:6px}
+.amc-type{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(201,168,76,0.5)}
+
+/* REGULATORY */
+.regulatory{background:var(--off-white)}
+.reg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px}
+.reg-card{background:var(--cream);padding:40px;border-bottom:3px solid transparent;transition:all 0.3s}
+.reg-card:hover{border-color:var(--gold);background:#fff;box-shadow:0 12px 40px rgba(0,0,0,0.06)}
+.rc-badge{display:inline-block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:4px 12px;margin-bottom:20px}
+.rc-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--navy);margin-bottom:12px;font-weight:300}
+.rc-desc{font-size:13px;line-height:1.75;color:var(--mid-gray)}
+
+/* ASSET CLASSES */
+.asset-section{background:var(--cream)}
+.asset-tabs{display:flex;gap:0;margin-bottom:48px;border-bottom:1px solid var(--light-gray)}
+.at-btn{padding:16px 28px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mid-gray);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.3s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Inter',sans-serif}
+.at-btn.active{color:var(--navy);border-color:var(--gold)}
+.at-btn:hover{color:var(--navy)}
+.asset-panel{display:none}.asset-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:60px}
+.ap-text p{font-size:14px;line-height:1.85;color:var(--mid-gray);margin-bottom:14px}
+.ap-stats{display:flex;flex-direction:column;gap:0}
+.ap-stat{display:grid;grid-template-columns:1fr 1fr;padding:20px 0;border-bottom:1px solid var(--light-gray)}
+.ap-stat:first-child{border-top:1px solid var(--light-gray)}
+.ap-stat-label{font-size:12px;color:var(--mid-gray);letter-spacing:0.5px}
+.ap-stat-val{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy);text-align:right;font-weight:300}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--navy);padding:100px 60px}
+.test-inner{max-width:1200px;margin:0 auto}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px}
+.test-card{background:rgba(255,255,255,0.04);padding:40px;transition:background 0.3s}
+.test-card:hover{background:rgba(255,255,255,0.07)}
+.tc-quote{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:rgba(255,255,255,0.75);line-height:1.65;margin-bottom:28px}
+.tc-quote::before{content:'\201C';font-size:48px;color:var(--gold);opacity:0.4;line-height:0;vertical-align:-20px;margin-right:4px}
+.tc-name{font-size:13px;font-weight:500;color:#fff;margin-bottom:4px}
+.tc-role{font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:1px}
+.tc-stars{color:var(--gold);font-size:12px;margin-bottom:16px;letter-spacing:2px}
+
+/* ====== FOREX PAGE ====== */
+.forex-hero-extra{background:var(--gold);padding:0 60px}
+.fhe-inner{max-width:1200px;margin:0 auto;display:flex;gap:60px;padding:40px 0}
+.fhe-stat{text-align:center;flex:1;padding:0 20px;border-right:1px solid rgba(10,22,40,0.15)}
+.fhe-stat:last-child{border-right:none}
+.fhe-num{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--navy);font-weight:300}
+.fhe-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(10,22,40,0.55);margin-top:4px}
+
+.forex-services{background:var(--off-white)}
+.forex-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px}
+.forex-card{background:var(--navy);padding:44px 36px;transition:all 0.4s;position:relative;overflow:hidden}
+.forex-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform 0.4s;transform-origin:left}
+.forex-card:hover::before{transform:scaleX(1)}
+.forex-card:hover{background:var(--navy-mid)}
+.fc-icon{font-size:32px;margin-bottom:20px;opacity:0.6}
+.fc-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:#fff;margin-bottom:12px;font-weight:300}
+.fc-desc{font-size:13px;line-height:1.75;color:rgba(255,255,255,0.45);margin-bottom:20px}
+.fc-note{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
+
+/* RATES TICKER */
+.rates-section{background:var(--cream);padding:80px 60px}
+.rates-inner{max-width:1200px;margin:0 auto}
+.rates-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:40px}
+.rate-card{background:var(--navy);padding:32px;text-align:center;transition:all 0.3s}
+.rate-card:hover{background:var(--navy-mid)}
+.rc-pair{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:12px}
+.rc-rate{font-family:'Cormorant Garamond',serif;font-size:36px;color:#fff;font-weight:300;margin-bottom:4px}
+.rc-change{font-size:11px;letter-spacing:1px}
+.rc-change.up{color:#8A9E8B}.rc-change.dn{color:#C47B7B}
+.rc-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-top:8px}
+
+/* FOREX PROCESS */
+.forex-process{background:var(--navy);padding:80px 60px}
+.fp-inner{max-width:1200px;margin:0 auto}
+.fp-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:48px;position:relative}
+.fp-steps::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:1px;background:rgba(201,168,76,0.2)}
+.fp-step{text-align:center;padding:0 16px;position:relative;z-index:1}
+.fp-dot{width:56px;height:56px;border-radius:50%;border:1px solid rgba(201,168,76,0.3);background:var(--navy);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);transition:all 0.3s;font-weight:300}
+.fp-step:hover .fp-dot{background:rgba(201,168,76,0.1);border-color:var(--gold)}
+.fp-title{font-size:12px;font-weight:500;color:#fff;margin-bottom:8px;letter-spacing:0.5px}
+.fp-desc{font-size:11px;line-height:1.6;color:rgba(255,255,255,0.35)}
+
+/* FOREX WHY */
+.forex-why{background:var(--cream)}
+.fw-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.fw-list{display:flex;flex-direction:column;gap:0}
+.fw-item{padding:24px 0;border-bottom:1px solid var(--light-gray);display:grid;grid-template-columns:40px 1fr;gap:16px;align-items:start}
+.fw-item:first-child{border-top:1px solid var(--light-gray)}
+.fw-num{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);font-weight:300}
+.fw-title{font-size:14px;font-weight:500;color:var(--navy);margin-bottom:6px}
+.fw-desc{font-size:13px;line-height:1.7;color:var(--mid-gray)}
+
+/* FOREX CTA */
+.forex-cta{background:var(--navy);padding:80px 60px;display:flex;align-items:center;justify-content:space-between}
+.fca-text .fca-eye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.fca-text h2{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,44px);font-weight:300;color:#fff;line-height:1.2}
+.fca-text h2 em{font-style:italic;color:var(--gold-light)}
+.btn-gold{background:var(--gold);color:var(--navy);padding:18px 40px;font-size:12px;letter-spacing:2px;text-transform:uppercase;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.3s;font-family:'Inter',sans-serif;font-weight:500;white-space:nowrap}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px)}
+
+footer{background:var(--navy);color:rgba(255,255,255,0.5);padding:80px 60px 40px;border-top:1px solid rgba(255,255,255,0.06)}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:60px}
+.footer-brand-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;letter-spacing:3px;font-weight:600;margin-bottom:4px}
+.footer-brand-sub{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
+.footer-about{font-size:13px;line-height:1.7;max-width:280px}
+.footer-col-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.footer-col a,.footer-col p{display:block;font-size:13px;color:rgba(255,255,255,0.45);text-decoration:none;margin-bottom:10px;transition:color 0.3s;line-height:1.6}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:32px;display:flex;justify-content:space-between;align-items:center}
+.footer-legal{font-size:11px}
+.footer-sebi{font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">WPF Capital</div>
+    <div class="nav-logo-sub">Private Wealth & Advisory</div>
+  </div>
+  <div class="nav-links">
+    <a href="#">Philosophy</a>
+    <a href="#">Services</a>
+    <a href="#" class="active">Expertise</a>
+    <a href="#">Insights</a>
+    <a href="#" class="nav-cta">Request Consultation</a>
+  </div>
+</nav>
+
+<div class="page-switcher">
+  <button class="psw-btn active" id="sw-exp">Expertise</button>
+  <button class="psw-btn" id="sw-forex">WPF Forex</button>
+</div>
+
+<!-- ========== EXPERTISE PAGE ========== -->
+<div class="page active" id="page-exp">
+  <section class="page-hero">
+    <div class="hero-line"></div>
+    <div class="hero-content">
+      <div class="eyebrow">Our Expertise</div>
+      <h1 class="page-h1">Nine years of earning<br><em>the right to advise.</em></h1>
+      <p class="hero-sub">Credentials, institutional relationships, regulatory standing, and deep asset class knowledge — built over 17+ years per founder, across every market cycle.</p>
+    </div>
+  </section>
+
+  <!-- STATS BAND -->
+  <div class="stats-band">
+    <div class="sb-inner">
+      <div class="sb-stat"><div class="sb-num">9<span>+</span></div><div class="sb-label">Years Advisory Practice</div></div>
+      <div class="sb-stat"><div class="sb-num">34<span>+</span></div><div class="sb-label">Years Combined Experience</div></div>
+      <div class="sb-stat"><div class="sb-num">20<span>+</span></div><div class="sb-label">AMC Partnerships</div></div>
+      <div class="sb-stat"><div class="sb-num">10<span>+</span></div><div class="sb-label">Banking Partners</div></div>
+      <div class="sb-stat"><div class="sb-num">3</div><div class="sb-label">Offices, Delhi-NCR</div></div>
+    </div>
+  </div>
+
+  <!-- CREDENTIALS -->
+  <section class="sec credentials">
+    <div class="sec-inner">
+      <div class="cred-grid">
+        <div>
+          <div class="sec-label">Professional Credentials</div>
+          <h2 class="sec-h2">Qualified, regulated,<br>and <em>accountable.</em></h2>
+          <div class="cred-body">
+            <p>WPF Capital's advisory practice is built on institutional-grade credentials — not just experience. Both founders hold MBA Finance degrees from ICFAI Hyderabad and carry the full weight of SEBI registration, AMFI certification, and IRDAI authorisation.</p>
+            <div class="cred-pull">"In financial advisory, credentials are not just paperwork. They are the difference between advice and opinion."</div>
+            <p>Our regulatory standing means you have recourse, transparency, and the protection of India's financial regulatory framework in every interaction with WPF Capital.</p>
+          </div>
+        </div>
+        <div class="cred-list fade-up">
+          <div class="cred-item"><div class="ci-dot"></div><div><div class="ci-title">SEBI Registered Investment Advisor</div><div class="ci-sub">Securities and Exchange Board of India · Full RIA registration</div></div></div>
+          <div class="cred-item"><div class="ci-dot"></div><div><div class="ci-title">AMFI Registered Mutual Fund Distributor</div><div class="ci-sub">Association of Mutual Funds in India · ARN Holder</div></div></div>
+          <div class="cred-item"><div class="ci-dot"></div><div><div class="ci-title">IRDAI Authorised Insurance Agent</div><div class="ci-sub">Insurance Regulatory & Development Authority of India</div></div></div>
+          <div class="cred-item"><div class="ci-dot"></div><div><div class="ci-title">MBA Finance — ICFAI Hyderabad</div><div class="ci-sub">Amit Aggarwal & Yogesh Sharma · Dual founder credentials</div></div></div>
+          <div class="cred-item"><div class="ci-dot"></div><div><div class="ci-title">Authorised Channel Partner — Multiple Banks</div><div class="ci-sub">Bank of Baroda · HDFC · ICICI · Axis · Citibank · RBL · LIC</div></div></div>
+          <div class="cred-item"><div class="ci-dot"></div><div><div class="ci-title">NISM Certified — Series V-A, Series VI, Series VII</div><div class="ci-sub">National Institute of Securities Markets certifications</div></div></div>
+          <div class="cred-item"><div class="ci-dot"></div><div><div class="ci-title">IRDA Licence — Life & General Insurance</div><div class="ci-sub">Both life and non-life insurance distribution authorisation</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AMC PARTNERS -->
+  <section class="sec amc-section">
+    <div class="sec-inner">
+      <div class="sec-label" style="color:var(--gold)">Fund House Partnerships</div>
+      <h2 class="sec-h2 sec-h2-w">Access to every major<br><em style="color:var(--gold-light)">Asset Management Company.</em></h2>
+      <p class="sec-sub" style="color:rgba(255,255,255,0.45)">Our distribution relationships span India's full mutual fund universe — giving clients access to every AMC's product range, with our independent advisory lens applied on top.</p>
+      <div class="amc-grid fade-up">
+        <div class="amc-card"><div class="amc-name">SBI Mutual Fund</div><div class="amc-type">India's Largest AMC</div></div>
+        <div class="amc-card"><div class="amc-name">HDFC Mutual Fund</div><div class="amc-type">Equity & Debt Leader</div></div>
+        <div class="amc-card"><div class="amc-name">ICICI Prudential</div><div class="amc-type">Multi-Asset Specialists</div></div>
+        <div class="amc-card"><div class="amc-name">Nippon India MF</div><div class="amc-type">Diversified Strategies</div></div>
+        <div class="amc-card"><div class="amc-name">Axis Mutual Fund</div><div class="amc-type">Quality Growth Focus</div></div>
+        <div class="amc-card"><div class="amc-name">Kotak Mutual Fund</div><div class="amc-type">Balanced Solutions</div></div>
+        <div class="amc-card"><div class="amc-name">Mirae Asset</div><div class="amc-type">Global & Equity Funds</div></div>
+        <div class="amc-card"><div class="amc-name">DSP Mutual Fund</div><div class="amc-type">Factor & Index Strategies</div></div>
+        <div class="amc-card"><div class="amc-name">Franklin Templeton</div><div class="amc-type">Fixed Income Expertise</div></div>
+        <div class="amc-card"><div class="amc-name">Aditya Birla Sun Life</div><div class="amc-type">Debt Market Leaders</div></div>
+        <div class="amc-card"><div class="amc-name">UTI Mutual Fund</div><div class="amc-type">India's Heritage AMC</div></div>
+        <div class="amc-card"><div class="amc-name">Tata Mutual Fund</div><div class="amc-type">Diversified Range</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGULATORY -->
+  <section class="sec regulatory">
+    <div class="sec-inner">
+      <div class="sec-label">Regulatory Framework</div>
+      <h2 class="sec-h2">Operating under the highest<br>standards of <em>investor protection.</em></h2>
+      <p class="sec-sub">Every aspect of WPF Capital's practice is governed by India's financial regulatory framework — providing clients with transparency, accountability, and legal recourse.</p>
+      <div class="reg-grid fade-up">
+        <div class="reg-card"><div class="rc-badge">SEBI</div><div class="rc-title">Investment Advisory Regulation</div><div class="rc-desc">As a SEBI Registered Investment Advisor, WPF Capital is bound by the IA Regulations 2013 — ensuring fee transparency, conflict of interest disclosures, and fiduciary standards in all investment advice.</div></div>
+        <div class="reg-card"><div class="rc-badge">AMFI</div><div class="rc-title">Mutual Fund Distribution</div><div class="rc-desc">AMFI registration governs our mutual fund distribution practice — including KYC compliance, disclosure of commissions, and adherence to SEBI's total expense ratio regulations.</div></div>
+        <div class="reg-card"><div class="rc-badge">IRDAI</div><div class="rc-title">Insurance Distribution</div><div class="rc-desc">Our insurance advisory and distribution operates under IRDAI authorisation — with regulated disclosure requirements, policyholder protection, and grievance redressal mechanisms.</div></div>
+        <div class="reg-card"><div class="rc-badge">RBI</div><div class="rc-title">Lending & Forex Advisory</div><div class="rc-desc">Our loan and forex advisory services operate within RBI's regulatory framework — through our authorised partnerships with RBI-regulated banks and financial institutions.</div></div>
+        <div class="reg-card"><div class="rc-badge">KYC/AML</div><div class="rc-title">Customer Due Diligence</div><div class="rc-desc">Full KYC and Anti-Money Laundering compliance for all clients — conducted through CERSAI, CKYC Registry, and SEBI-approved KRA (KYC Registration Agencies).</div></div>
+        <div class="reg-card"><div class="rc-badge">NISM</div><div class="rc-title">Certified Professionals</div><div class="rc-desc">Our advisory team holds NISM certifications across Series V-A (Mutual Fund Distributors), Series VI (Depository Operations), and Series VII (Securities Operations) — mandatory competency standards.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASSET CLASS EXPERTISE -->
+  <section class="sec asset-section">
+    <div class="sec-inner">
+      <div class="sec-label">Asset Class Knowledge</div>
+      <h2 class="sec-h2">Deep expertise across<br>every <em>investable asset class.</em></h2>
+      <div class="asset-tabs">
+        <button class="at-btn active" data-panel="ap1">Equity</button>
+        <button class="at-btn" data-panel="ap2">Fixed Income</button>
+        <button class="at-btn" data-panel="ap3">Alternatives</button>
+        <button class="at-btn" data-panel="ap4">Insurance</button>
+        <button class="at-btn" data-panel="ap5">Real Assets</button>
+      </div>
+      <div class="asset-panel active" id="ap1">
+        <div class="ap-text"><p>Equity remains the primary wealth-creation asset class for long-term investors. Our equity advisory spans direct equity strategies (through PMS), equity mutual funds across market caps, and tactical sector/thematic positioning.</p><p>We evaluate fund managers on rolling returns, downside protection, portfolio concentration, and style consistency — not just point-to-point NAV performance.</p><p>Our equity philosophy: quality compounders at the core, tactical tilts at the margin, and absolute discipline in not chasing recent performance.</p></div>
+        <div class="ap-stats">
+          <div class="ap-stat"><span class="ap-stat-label">Recommended equity allocation (30–50 yr)</span><span class="ap-stat-val">60–80%</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">Preferred rebalancing frequency</span><span class="ap-stat-val">Annual</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">AMC relationships for equity</span><span class="ap-stat-val">12+</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">PMS managers empanelled</span><span class="ap-stat-val">8+</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">Minimum recommended SIP horizon</span><span class="ap-stat-val">7 Years</span></div>
+        </div>
+      </div>
+      <div class="asset-panel" id="ap2">
+        <div class="ap-text"><p>Fixed income is not just a parking ground for short-term money. A well-constructed debt portfolio can meaningfully contribute to total portfolio returns — especially in a rate easing cycle.</p><p>We navigate the full fixed income spectrum: liquid funds for emergency reserves, short-duration for 1–3 year horizons, long-duration for rate cycle plays, and select NCDs and bonds for yield enhancement.</p><p>Credit quality discipline is non-negotiable. We do not chase yield through credit risk that isn't adequately compensated.</p></div>
+        <div class="ap-stats">
+          <div class="ap-stat"><span class="ap-stat-label">Current 10-yr G-Sec yield range</span><span class="ap-stat-val">6.8–7.2%</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">Minimum credit rating (non-liquid)</span><span class="ap-stat-val">AA–</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">Preferred duration in easing cycle</span><span class="ap-stat-val">5–7 Yrs</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">Liquid fund yield (indicative)</span><span class="ap-stat-val">7.2%</span></div>
+        </div>
+      </div>
+      <div class="asset-panel" id="ap3">
+        <div class="ap-text"><p>Alternative investments — PMS, AIF Category I/II/III, structured products — are appropriate for investors with ₹50L+ in investable assets and a clear strategic rationale for the allocation.</p><p>We are empanelled with select Category II and III AIF managers and evaluate them on: strategy differentiation from mutual funds, team pedigree, fee structure, liquidity terms, and verified track record over a full market cycle.</p><p>We do not recommend alternatives to fill a product allocation quota. Every alternative recommendation has a specific portfolio role that cannot be filled by a simpler, cheaper product.</p></div>
+        <div class="ap-stats">
+          <div class="ap-stat"><span class="ap-stat-label">Minimum investable assets for AIF</span><span class="ap-stat-val">₹5 Cr+</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">Minimum AIF investment (SEBI)</span><span class="ap-stat-val">₹1 Crore</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">PMS minimum</span><span class="ap-stat-val">₹50 Lakhs</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">AIF managers empanelled</span><span class="ap-stat-val">5+</span></div>
+        </div>
+      </div>
+      <div class="asset-panel" id="ap4">
+        <div class="ap-text"><p>Insurance is not an investment — it is a risk transfer mechanism, and the two should never be confused. Our insurance advisory starts with this principle and works outward: calculate your protection need, choose the most cost-efficient product, and never pay for coverage you don't need.</p><p>We are empanelled with Tata AIG, Cigna, Liberty Mutual, Birla Sun Life, LIC, and others — giving us the ability to genuinely compare and recommend across the market.</p><p>We conduct a full insurance audit for every new client — mapping existing covers, identifying gaps and redundancies, and presenting a protection architecture that is proportional to their risk profile.</p></div>
+        <div class="ap-stats">
+          <div class="ap-stat"><span class="ap-stat-label">Recommended term cover (vs income)</span><span class="ap-stat-val">15–20x</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">Recommended health cover (metro family)</span><span class="ap-stat-val">₹20–25L</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">Insurance partners empanelled</span><span class="ap-stat-val">6+</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">Medical inflation rate (India)</span><span class="ap-stat-val">~14% p.a.</span></div>
+        </div>
+      </div>
+      <div class="asset-panel" id="ap5">
+        <div class="ap-text"><p>Real assets — primarily residential and commercial real estate — form a meaningful part of most HNI balance sheets in India. We don't advise on property transactions directly, but we do advise on the financial optimisation of real estate holdings: mortgage structuring, Loan Against Property strategy, and the role of real estate in portfolio construction.</p><p>We help clients understand when their real estate is working hard for them — and when it is simply the largest illiquid asset on their balance sheet, not contributing to either yield or growth.</p></div>
+        <div class="ap-stats">
+          <div class="ap-stat"><span class="ap-stat-label">Typical rental yield (NCR residential)</span><span class="ap-stat-val">2–4%</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">LAP LTV (typical)</span><span class="ap-stat-val">Up to 65%</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">LAP starting rate</span><span class="ap-stat-val">9.25%</span></div>
+          <div class="ap-stat"><span class="ap-stat-label">REITs available on Indian exchanges</span><span class="ap-stat-val">3+</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <div class="testimonials">
+    <div class="test-inner">
+      <div class="sec-label" style="color:var(--gold)">Client Voices</div>
+      <h2 class="sec-h2 sec-h2-w" style="margin-bottom:0">What our clients say<br><em style="color:var(--gold-light)">about the difference.</em></h2>
+      <div class="test-grid">
+        <div class="test-card fade-up">
+          <div class="tc-stars">★★★★★</div>
+          <div class="tc-quote">WPF reviewed my entire financial life in a single meeting and found three insurance policies I was paying for that were completely redundant. That one conversation paid for itself many times over.</div>
+          <div class="tc-name">Business Owner, Gurugram</div><div class="tc-role">Client since 2018 · Investments & Insurance</div>
+        </div>
+        <div class="test-card fade-up" style="transition-delay:0.1s">
+          <div class="tc-stars">★★★★★</div>
+          <div class="tc-quote">Amit picks up the phone. That sounds like a small thing, but when you're thinking about your family's financial future, having a founder accessible to you is everything.</div>
+          <div class="tc-name">Senior Executive, Delhi</div><div class="tc-role">Client since 2019 · Complete Financial Advisory</div>
+        </div>
+        <div class="test-card fade-up" style="transition-delay:0.2s">
+          <div class="tc-stars">★★★★★</div>
+          <div class="tc-quote">Yogesh structured our business loan in a way three other advisors had told us wasn't possible. The rate and tenure we got made a real difference to our expansion plans.</div>
+          <div class="tc-name">Entrepreneur, Janak Puri</div><div class="tc-role">Client since 2020 · Capital Solutions</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== FOREX PAGE ========== -->
+<div class="page" id="page-forex">
+  <section class="page-hero">
+    <div class="hero-line"></div>
+    <div class="hero-content">
+      <div class="eyebrow">WPF Forex</div>
+      <h1 class="page-h1">Currency management<br>for the <em>globally minded.</em></h1>
+      <p class="hero-sub">Foreign exchange advisory and remittance services — competitive rates, RBI-compliant execution, and expert guidance for individuals and corporates.</p>
+    </div>
+  </section>
+
+  <div class="forex-hero-extra">
+    <div class="fhe-inner">
+      <div class="fhe-stat"><div class="fhe-num">30+</div><div class="fhe-label">Currencies Covered</div></div>
+      <div class="fhe-stat"><div class="fhe-num">RBI</div><div class="fhe-label">Compliant Operations</div></div>
+      <div class="fhe-stat"><div class="fhe-num">T+1</div><div class="fhe-label">Typical Settlement</div></div>
+      <div class="fhe-stat"><div class="fhe-num">0%</div><div class="fhe-label">Hidden Charges</div></div>
+      <div class="fhe-stat"><div class="fhe-num">24hr</div><div class="fhe-label">Rate Validity Window</div></div>
+    </div>
+  </div>
+
+  <section class="sec forex-services">
+    <div class="sec-inner">
+      <div class="sec-label">Forex Services</div>
+      <h2 class="sec-h2">Everything you need for<br><em>cross-border currency.</em></h2>
+      <p class="sec-sub">From personal remittances and travel forex to corporate hedging advisory — WPF Forex provides institutional-quality currency services to individuals and businesses.</p>
+      <div class="forex-grid fade-up">
+        <div class="forex-card">
+          <div class="fc-icon">✈</div>
+          <div class="fc-title">Travel Forex</div>
+          <div class="fc-desc">Foreign currency notes and prepaid travel cards for international travel — competitive rates with same-day delivery for major currencies. Available for all nationalities travelling abroad.</div>
+          <div class="fc-note">USD · EUR · GBP · JPY · AED · SGD · AUD · CAD + 20 more</div>
+        </div>
+        <div class="forex-card">
+          <div class="fc-icon">🏠</div>
+          <div class="fc-title">Inward Remittance</div>
+          <div class="fc-desc">Receive foreign currency from abroad — NRI remittances, salary credits, investment proceeds, or family transfers — converted at the best available rate with full FEMA compliance.</div>
+          <div class="fc-note">FEMA Compliant · Full Documentation Support</div>
+        </div>
+        <div class="forex-card">
+          <div class="fc-icon">📤</div>
+          <div class="fc-title">Outward Remittance</div>
+          <div class="fc-desc">Send money overseas for education, property purchase, investment, emigration, or family support — under the Liberalised Remittance Scheme (LRS) with RBI-compliant documentation.</div>
+          <div class="fc-note">LRS Limit: USD 2,50,000 per year</div>
+        </div>
+        <div class="forex-card">
+          <div class="fc-icon">🏢</div>
+          <div class="fc-title">Corporate Forex</div>
+          <div class="fc-desc">Foreign exchange for businesses — import/export payments, international payroll, cross-border investments, and working capital in foreign currency with competitive bulk rates.</div>
+          <div class="fc-note">For SMEs, Exporters & Importers</div>
+        </div>
+        <div class="forex-card">
+          <div class="fc-icon">📚</div>
+          <div class="fc-title">Education Remittance</div>
+          <div class="fc-desc">Seamless foreign currency transfer for university tuition, accommodation, and living expenses abroad — with proper documentation under Form A2 and LRS compliance.</div>
+          <div class="fc-note">University Wire Transfer Specialists</div>
+        </div>
+        <div class="forex-card">
+          <div class="fc-icon">📊</div>
+          <div class="fc-title">Hedging Advisory</div>
+          <div class="fc-desc">For businesses with significant forex exposure — advisory on natural hedges, forward contracts, and currency risk management strategies to protect margins from exchange rate volatility.</div>
+          <div class="fc-note">For Businesses with USD 1L+ Forex Exposure</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDICATIVE RATES -->
+  <div class="rates-section">
+    <div class="rates-inner">
+      <div class="sec-label">Indicative Exchange Rates</div>
+      <h2 class="sec-h2">Live-rate pricing.<br><em>No hidden margins.</em></h2>
+      <div class="rates-grid fade-up">
+        <div class="rate-card"><div class="rc-pair">USD / INR</div><div class="rc-rate" id="r1">84.32</div><div class="rc-change up" id="rc1">▲ 0.12 (+0.14%)</div><div class="rc-label">US Dollar</div></div>
+        <div class="rate-card"><div class="rc-pair">EUR / INR</div><div class="rc-rate" id="r2">91.47</div><div class="rc-change dn" id="rc2">▼ 0.08 (−0.09%)</div><div class="rc-label">Euro</div></div>
+        <div class="rate-card"><div class="rc-pair">GBP / INR</div><div class="rc-rate" id="r3">107.83</div><div class="rc-change up" id="rc3">▲ 0.31 (+0.29%)</div><div class="rc-label">British Pound</div></div>
+        <div class="rate-card"><div class="rc-pair">AED / INR</div><div class="rc-rate" id="r4">22.96</div><div class="rc-change up" id="rc4">▲ 0.04 (+0.17%)</div><div class="rc-label">UAE Dirham</div></div>
+      </div>
+      <p style="font-size:11px;color:var(--light-gray);margin-top:20px;letter-spacing:0.5px">Indicative rates for reference only. Actual transaction rates depend on amount, currency, and timing. Contact us for a live quote.</p>
+    </div>
+  </div>
+
+  <!-- PROCESS -->
+  <div class="forex-process">
+    <div class="fp-inner">
+      <div class="sec-label" style="color:var(--gold)">How It Works</div>
+      <h2 class="sec-h2 sec-h2-w" style="margin-bottom:0">Simple. Transparent.<br><em style="color:var(--gold-light)">Compliant.</em></h2>
+      <div class="fp-steps">
+        <div class="fp-step"><div class="fp-dot">1</div><div class="fp-title">Contact Us</div><div class="fp-desc">Call or WhatsApp our forex desk with your requirement</div></div>
+        <div class="fp-step"><div class="fp-dot">2</div><div class="fp-title">Get a Quote</div><div class="fp-desc">Receive a live rate valid for 24 hours — no obligation</div></div>
+        <div class="fp-step"><div class="fp-dot">3</div><div class="fp-title">Submit KYC</div><div class="fp-desc">PAN, Aadhaar, and purpose documentation (minimal)</div></div>
+        <div class="fp-step"><div class="fp-dot">4</div><div class="fp-title">Transfer Funds</div><div class="fp-desc">Transfer INR to our designated account at agreed rate</div></div>
+        <div class="fp-step"><div class="fp-dot">5</div><div class="fp-title">Forex Delivered</div><div class="fp-desc">Currency delivered to you or wired to destination — T+1</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHY WPF FOREX -->
+  <section class="sec forex-why">
+    <div class="sec-inner">
+      <div class="fw-grid">
+        <div>
+          <div class="sec-label">Why WPF Forex</div>
+          <h2 class="sec-h2">Better than your bank.<br><em>More trustworthy</em> than a broker.</h2>
+          <p class="sec-sub" style="margin-bottom:0">Banks offer convenience. Brokers offer speed. WPF Forex offers the combination of competitive rates, regulatory compliance, and the accountability of a relationship you already trust.</p>
+        </div>
+        <div class="fw-list fade-up">
+          <div class="fw-item"><div class="fw-num">01</div><div><div class="fw-title">Competitive Rates</div><div class="fw-desc">Our rates are consistently better than bank counters — typically 20–40 paise per dollar better than retail bank rates, which compounds meaningfully on large transactions.</div></div></div>
+          <div class="fw-item"><div class="fw-num">02</div><div><div class="fw-title">Full FEMA Compliance</div><div class="fw-desc">Every transaction is documented and executed in full compliance with the Foreign Exchange Management Act — no grey areas, no risk to your KYC standing.</div></div></div>
+          <div class="fw-item"><div class="fw-num">03</div><div><div class="fw-title">No Hidden Charges</div><div class="fw-desc">The rate we quote is the rate you pay. No service charges buried in fine print. No TCS surprises. Full transparency before you commit.</div></div></div>
+          <div class="fw-item"><div class="fw-num">04</div><div><div class="fw-title">Founder Accountability</div><div class="fw-desc">WPF Forex is part of the same advisory practice as your wealth management relationship. Amit and Yogesh stand behind every transaction.</div></div></div>
+          <div class="fw-item"><div class="fw-num">05</div><div><div class="fw-title">30+ Currencies</div><div class="fw-desc">We handle major and minor currencies — including less common pairs like JPY, SGD, CAD, CHF, and Gulf currencies for remittance and travel.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="forex-cta">
+    <div class="fca-text">
+      <div class="fca-eye">Get a Live Rate</div>
+      <h2>Send money abroad — or bring it home — <em>at rates that respect your wealth.</em></h2>
+    </div>
+    <a href="#" class="btn-gold">Request a Forex Quote</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">WPF Capital</div>
+      <div class="footer-brand-sub">Private Wealth & Advisory</div>
+      <p class="footer-about">Founded in 2016, WPF Capital is Delhi-NCR's trusted private wealth advisory firm — investment advisory, insurance, capital solutions, and forex.</p>
+    </div>
+    <div class="footer-col"><div class="footer-col-title">Services</div><a href="#">Investment Advisory</a><a href="#">Protection & Insurance</a><a href="#">Capital Solutions</a><a href="#">WPF Forex</a></div>
+    <div class="footer-col"><div class="footer-col-title">Firm</div><a href="#">Philosophy</a><a href="#">Expertise</a><a href="#">WPF Perspective</a><a href="#">Privacy Policy</a></div>
+    <div class="footer-col"><div class="footer-col-title">Offices</div><p>Janak Puri, New Delhi</p><p>M3M Market, Gurugram</p><p>Sector-8, Rohini, Delhi</p><p style="margin-top:12px;color:var(--gold)">+91 99107 09583</p></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-legal">© 2026 WPF Capital. All rights reserved.</div>
+    <div class="footer-sebi">SEBI Registered · AMFI ARN Holder · IRDAI Authorised · FEMA Compliant</div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('sw-exp').addEventListener('click',()=>sw('exp'));
+document.getElementById('sw-forex').addEventListener('click',()=>sw('forex'));
+function sw(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.psw-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.getElementById('sw-'+p).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.at-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.at-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.asset-panel').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(b.dataset.panel).classList.add('active');
+  });
+});
+// Subtle rate flicker
+function flicker(){
+  const pairs=[{id:'r1',base:84.32},{id:'r2',base:91.47},{id:'r3',base:107.83},{id:'r4',base:22.96}];
+  pairs.forEach(p=>{
+    const delta=(Math.random()-0.5)*0.15;
+    const newVal=(p.base+delta).toFixed(2);
+    const el=document.getElementById(p.id);
+    if(el) el.textContent=newVal;
+  });
+}
+setInterval(flicker,4000);
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:0.1});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
