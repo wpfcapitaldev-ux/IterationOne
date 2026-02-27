@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WPF Capital — Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0A1628;--navy-mid:#122040;--gold:#C9A84C;--gold-light:#E2C97E;--cream:#F5F0E8;--off-white:#FAFAF8;--charcoal:#1C1C1E;--mid-gray:#6B6B6B;--light-gray:#D4D0C8;--sage:#8A9E8B}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--off-white);color:var(--charcoal);overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:24px 60px;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px)}
+.nav-logo{display:flex;flex-direction:column}
+.nav-logo-mark{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:3px;color:#fff;text-transform:uppercase}
+.nav-logo-sub{font-size:9px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-top:2px}
+.nav-links{display:flex;gap:40px;align-items:center}
+.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;transition:color 0.3s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-cta{border:1px solid var(--gold)!important;color:var(--gold)!important;padding:10px 22px;font-size:11px!important;transition:all 0.3s!important}
+.nav-cta:hover{background:var(--gold)!important;color:var(--navy)!important}
+
+/* PAGE HERO */
+.page-hero{height:55vh;min-height:480px;background:var(--navy);display:flex;align-items:flex-end;padding:0 60px 80px;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;top:-20%;right:-5%;width:55vw;height:55vw;max-width:700px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.07) 0%,transparent 65%)}
+.page-hero-line{position:absolute;left:60px;top:0;bottom:0;width:1px;background:rgba(201,168,76,0.15)}
+.page-hero-content{z-index:2;padding-left:40px}
+.page-eyebrow{font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.page-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+.page-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,5.5vw,80px);font-weight:300;color:#fff;line-height:1.05}
+.page-h1 em{font-style:italic;color:var(--gold-light)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.5);margin-top:20px;max-width:520px;line-height:1.7;font-weight:300}
+
+/* SERVICE TABS */
+.service-nav{background:var(--navy);border-top:1px solid rgba(255,255,255,0.08);padding:0 100px;position:sticky;top:72px;z-index:90;display:flex;gap:0}
+.svc-tab{padding:20px 36px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.3s;white-space:nowrap}
+.svc-tab:hover{color:rgba(255,255,255,0.7)}
+.svc-tab.active{color:var(--gold);border-color:var(--gold)}
+
+/* SERVICE SECTIONS */
+.svc-section{padding:100px 60px;display:none}
+.svc-section.active{display:block}
+.svc-section:nth-child(odd){background:var(--off-white)}
+.svc-section:nth-child(even){background:var(--cream)}
+
+.svc-inner{max-width:1200px;margin:0 auto}
+.section-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.section-label::before{content:'';display:block;width:24px;height:1px;background:var(--gold)}
+.svc-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,56px);font-weight:300;color:var(--navy);line-height:1.15;margin-bottom:20px}
+.svc-h2 em{font-style:italic;color:var(--gold)}
+.svc-lead{font-size:16px;line-height:1.8;color:var(--mid-gray);max-width:640px;margin-bottom:60px;font-weight:300}
+
+.svc-hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-bottom:80px}
+.svc-body p{font-size:14px;line-height:1.85;color:var(--mid-gray);margin-bottom:18px}
+.svc-pull{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--navy);border-left:2px solid var(--gold);padding-left:24px;margin:28px 0;line-height:1.5}
+
+/* Product Cards */
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:60px}
+.product-card{background:var(--navy);padding:40px 36px;transition:all 0.4s;position:relative;overflow:hidden}
+.product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform 0.4s;transform-origin:left}
+.product-card:hover::before{transform:scaleX(1)}
+.product-card:hover{background:var(--navy-mid)}
+.pc-icon{font-family:'Cormorant Garamond',serif;font-size:40px;color:rgba(201,168,76,0.2);margin-bottom:20px;line-height:1;font-weight:300}
+.pc-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:#fff;margin-bottom:12px;font-weight:300}
+.pc-desc{font-size:13px;line-height:1.75;color:rgba(255,255,255,0.4);margin-bottom:20px}
+.pc-min{font-size:10px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase}
+
+/* Fund types grid */
+.fund-types{display:grid;grid-template-columns:repeat(2,1fr);gap:2px}
+.fund-type{background:var(--cream);padding:32px;border-left:2px solid transparent;transition:all 0.3s}
+.fund-type:hover{border-color:var(--gold);background:#fff}
+.ft-title{font-size:15px;font-weight:500;color:var(--navy);margin-bottom:8px}
+.ft-desc{font-size:13px;line-height:1.7;color:var(--mid-gray)}
+.ft-items{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+.ft-tag{font-size:10px;letter-spacing:1px;padding:4px 10px;background:rgba(10,22,40,0.06);color:var(--navy);text-transform:uppercase}
+
+/* Insurance */
+.ins-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.ins-card{border:1px solid var(--light-gray);padding:36px;transition:all 0.4s}
+.ins-card:hover{border-color:var(--gold);box-shadow:0 12px 40px rgba(0,0,0,0.07);transform:translateY(-3px)}
+.ins-icon{width:44px;height:44px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:18px}
+.ins-title{font-size:16px;font-weight:500;color:var(--navy);margin-bottom:10px}
+.ins-desc{font-size:13px;line-height:1.7;color:var(--mid-gray)}
+.ins-for{font-size:10px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-top:16px}
+
+/* Loans */
+.loans-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px}
+.loan-card{padding:48px;background:var(--navy);position:relative;overflow:hidden;transition:background 0.3s}
+.loan-card:hover{background:var(--navy-mid)}
+.lc-type{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.lc-title{font-family:'Cormorant Garamond',serif;font-size:28px;color:#fff;margin-bottom:16px;font-weight:300}
+.lc-rate{font-family:'Cormorant Garamond',serif;font-size:48px;color:var(--gold-light);font-weight:300;line-height:1;margin-bottom:4px}
+.lc-rate-label{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:24px}
+.lc-desc{font-size:13px;line-height:1.75;color:rgba(255,255,255,0.45)}
+.lc-banks{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.lc-bank{font-size:10px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(201,168,76,0.2);color:rgba(255,255,255,0.3)}
+
+/* Process bar */
+.process-strip{background:var(--gold);padding:60px;margin-bottom:0}
+.ps-inner{max-width:1200px;margin:0 auto}
+.ps-title{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--navy);margin-bottom:36px;font-weight:300}
+.ps-steps{display:flex;gap:0;position:relative}
+.ps-steps::before{content:'';position:absolute;top:20px;left:20px;right:20px;height:1px;background:rgba(10,22,40,0.2)}
+.ps-step{flex:1;text-align:center;position:relative;z-index:1}
+.ps-dot{width:40px;height:40px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);font-weight:300}
+.ps-label{font-size:11px;letter-spacing:1.5px;color:rgba(10,22,40,0.7);text-transform:uppercase;font-weight:500}
+
+/* CTA STRIP */
+.cta-strip{background:var(--navy);padding:80px 60px;display:flex;align-items:center;justify-content:space-between}
+.strip-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.strip-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,44px);font-weight:300;color:#fff;line-height:1.2}
+.strip-h2 em{font-style:italic;color:var(--gold)}
+.btn-gold{background:var(--gold);color:var(--navy);padding:18px 40px;font-size:12px;letter-spacing:2px;text-transform:uppercase;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.3s;font-family:'Inter',sans-serif;white-space:nowrap;font-weight:500}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px)}
+
+footer{background:var(--navy);color:rgba(255,255,255,0.5);padding:80px 60px 40px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:60px}
+.footer-brand-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;letter-spacing:3px;font-weight:600;margin-bottom:4px}
+.footer-brand-sub{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
+.footer-about{font-size:13px;line-height:1.7;max-width:280px}
+.footer-col-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.footer-col a,.footer-col p{display:block;font-size:13px;color:rgba(255,255,255,0.45);text-decoration:none;margin-bottom:10px;transition:color 0.3s;line-height:1.6}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:32px;display:flex;justify-content:space-between;align-items:center}
+.footer-legal{font-size:11px}
+.footer-sebi{font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px}
+
+.fade-up{opacity:0;transform:translateY(24px);transition:opacity 0.6s,transform 0.6s}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">WPF Capital</div>
+    <div class="nav-logo-sub">Private Wealth & Advisory</div>
+  </div>
+  <div class="nav-links">
+    <a href="#">Philosophy</a>
+    <a href="#" class="active">Services</a>
+    <a href="#">Expertise</a>
+    <a href="#">Insights</a>
+    <a href="#" class="nav-cta">Request Consultation</a>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero-line"></div>
+  <div class="page-hero-content">
+    <div class="page-eyebrow">What We Do</div>
+    <h1 class="page-h1">Comprehensive solutions for<br><em>every dimension</em> of your wealth.</h1>
+    <p class="hero-sub">Investments, protection, and capital — unified under one advisory practice, designed for your full financial life.</p>
+  </div>
+</section>
+
+<!-- SERVICE TABS NAV -->
+<div class="service-nav">
+  <div class="svc-tab active" data-tab="investments">Investment Advisory</div>
+  <div class="svc-tab" data-tab="insurance">Protection & Insurance</div>
+  <div class="svc-tab" data-tab="loans">Capital Solutions</div>
+  <div class="svc-tab" data-tab="platform">WPF Platform</div>
+</div>
+
+<!-- INVESTMENTS -->
+<section class="svc-section active" id="tab-investments" style="background:var(--off-white)">
+  <div class="svc-inner">
+    <div class="section-label">Investment Advisory</div>
+    <div class="svc-hero-grid">
+      <div>
+        <h2 class="svc-h2">Your portfolio.<br><em>Intelligently built.</em></h2>
+        <div class="svc-lead">We don't just pick funds. We design investment architectures — goal-aligned, tax-aware, risk-calibrated systems that work across market cycles.</div>
+      </div>
+      <div class="svc-body">
+        <p>Most investors have a collection of products — SIPs started on a friend's recommendation, an LIC policy from 2008, a fixed deposit renewed out of habit. What they don't have is a coherent strategy.</p>
+        <p>WPF Capital starts with your goals — retirement at 55, your daughter's education in 2031, a ₹10 Cr corpus in 15 years — and works backwards to build a portfolio that has a genuine chance of getting you there. Every position is deliberate. Every product earns its place.</p>
+        <div class="svc-pull">"The goal isn't the highest return. It's the right return, at the right risk, for your specific life."</div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:32px">Products We Work With</div>
+    <div class="products-grid fade-up">
+      <div class="product-card">
+        <div class="pc-icon">MF</div>
+        <div class="pc-title">Mutual Funds & SIPs</div>
+        <div class="pc-desc">Systematic investing across equity, debt, hybrid, and commodity fund categories from India's leading AMCs.</div>
+        <div class="pc-min">Min. Investment: ₹500/month</div>
+      </div>
+      <div class="product-card">
+        <div class="pc-icon">PMS</div>
+        <div class="pc-title">Portfolio Management Services</div>
+        <div class="pc-desc">Discretionary and non-discretionary portfolio management for high-value investors seeking direct equity strategies.</div>
+        <div class="pc-min">Min. Investment: ₹50 Lakhs</div>
+      </div>
+      <div class="product-card">
+        <div class="pc-icon">AIF</div>
+        <div class="pc-title">Alternative Investment Funds</div>
+        <div class="pc-desc">Category I, II, and III AIFs — private equity, venture capital, real estate funds, hedge strategies for sophisticated portfolios.</div>
+        <div class="pc-min">Min. Investment: ₹1 Crore</div>
+      </div>
+      <div class="product-card">
+        <div class="pc-icon">BD</div>
+        <div class="pc-title">Bonds & Fixed Income</div>
+        <div class="pc-desc">NCDs, RBI Bonds, Tax-Saving Capital Bonds, and Secondary Market Bonds for predictable yield and capital preservation.</div>
+        <div class="pc-min">Min. Investment: ₹10,000</div>
+      </div>
+      <div class="product-card">
+        <div class="pc-icon">FD</div>
+        <div class="pc-title">Fixed Deposits</div>
+        <div class="pc-desc">Curated corporate and bank FDs from creditworthy institutions — selected for safety, tenure, and rate optimization.</div>
+        <div class="pc-min">Min. Investment: ₹25,000</div>
+      </div>
+      <div class="product-card">
+        <div class="pc-icon">TAX</div>
+        <div class="pc-title">Tax-Efficient Structures</div>
+        <div class="pc-desc">ELSS, tax-saving bonds, and fund strategies designed to optimise your portfolio's after-tax return profile.</div>
+        <div class="pc-min">From ₹500/month</div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:32px;margin-top:60px">Mutual Fund Categories</div>
+    <div class="fund-types fade-up">
+      <div class="fund-type">
+        <div class="ft-title">Equity Funds</div>
+        <div class="ft-desc">Growth-oriented portfolios for long-term wealth creation — across large cap, mid cap, small cap, sectoral, and thematic strategies.</div>
+        <div class="ft-items"><span class="ft-tag">Large Cap</span><span class="ft-tag">Mid Cap</span><span class="ft-tag">Small Cap</span><span class="ft-tag">Flexi Cap</span><span class="ft-tag">Sectoral</span><span class="ft-tag">ELSS</span></div>
+      </div>
+      <div class="fund-type">
+        <div class="ft-title">Debt Funds</div>
+        <div class="ft-desc">Predictable income and capital stability — income funds, short-term, long-term, and fixed maturity plans for conservative allocations.</div>
+        <div class="ft-items"><span class="ft-tag">Income Funds</span><span class="ft-tag">Short Term</span><span class="ft-tag">Long Term</span><span class="ft-tag">Fixed Maturity</span></div>
+      </div>
+      <div class="fund-type">
+        <div class="ft-title">Hybrid Funds</div>
+        <div class="ft-desc">Balanced strategies that dynamically allocate between equity and debt — ideal for moderate risk profiles and medium-term goals.</div>
+        <div class="ft-items"><span class="ft-tag">Balanced</span><span class="ft-tag">Aggressive Hybrid</span><span class="ft-tag">Dynamic Asset Allocation</span></div>
+      </div>
+      <div class="fund-type">
+        <div class="ft-title">Commodity Funds</div>
+        <div class="ft-desc">Gold funds, silver funds, and agri funds for portfolio diversification and inflation hedge through commodity exposure.</div>
+        <div class="ft-items"><span class="ft-tag">Gold Funds</span><span class="ft-tag">Agri Funds</span><span class="ft-tag">International</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSURANCE -->
+<section class="svc-section" id="tab-insurance" style="background:var(--cream)">
+  <div class="svc-inner">
+    <div class="section-label">Protection & Insurance</div>
+    <div class="svc-hero-grid">
+      <div>
+        <h2 class="svc-h2">Protect what<br>you've <em>built.</em></h2>
+        <div class="svc-lead">Insurance is not a product category. It is the structural foundation that ensures your wealth survives whatever life presents — for you, your family, and your business.</div>
+      </div>
+      <div class="svc-body">
+        <p>Most people are either over-insured in the wrong ways or dangerously under-protected where it matters. A ₹1 Crore traditional life policy from 2010 is not a financial plan. It is a misallocation of premium.</p>
+        <p>WPF Capital conducts a complete insurance audit for every client — mapping existing covers, identifying gaps, eliminating redundancy, and designing a protection architecture that is proportional to what you have built and what you need to protect.</p>
+        <div class="svc-pull">"The only financial event that can undo decades of careful wealth building in a single moment is an uninsured risk."</div>
+      </div>
+    </div>
+    <div class="section-label" style="margin-bottom:32px">Individual & Family Protection</div>
+    <div class="ins-grid fade-up">
+      <div class="ins-card">
+        <div class="ins-icon">🛡</div>
+        <div class="ins-title">Term Insurance</div>
+        <div class="ins-desc">Pure life protection at the right coverage level — typically 10–15x annual income. We ensure your family's financial continuity is never at risk.</div>
+        <div class="ins-for">For Individuals & Families</div>
+      </div>
+      <div class="ins-card">
+        <div class="ins-icon">❤</div>
+        <div class="ins-title">Health Insurance</div>
+        <div class="ins-desc">Comprehensive health coverage with the right sum insured, the right add-ons, and the right insurer — not just the cheapest option.</div>
+        <div class="ins-for">Individuals, Families & Corporates</div>
+      </div>
+      <div class="ins-card">
+        <div class="ins-icon">🚗</div>
+        <div class="ins-title">Motor Insurance</div>
+        <div class="ins-desc">Car and vehicle insurance with comprehensive coverage, zero depreciation, and efficient claim support through our partner network.</div>
+        <div class="ins-for">Personal & Commercial Fleet</div>
+      </div>
+      <div class="ins-card">
+        <div class="ins-icon">🏢</div>
+        <div class="ins-title">Asset Insurance</div>
+        <div class="ins-desc">Property, home, office, and asset insurance — protecting the physical foundations of your personal and business life.</div>
+        <div class="ins-for">Residential & Commercial</div>
+      </div>
+      <div class="ins-card">
+        <div class="ins-icon">⚖</div>
+        <div class="ins-title">Liability Insurance</div>
+        <div class="ins-desc">Professional indemnity, public liability, and product liability covers for professionals and businesses exposed to third-party risk.</div>
+        <div class="ins-for">Professionals & Businesses</div>
+      </div>
+      <div class="ins-card">
+        <div class="ins-icon">🌊</div>
+        <div class="ins-title">Marine Insurance</div>
+        <div class="ins-desc">Cargo, hull, and transit insurance for businesses with import/export operations or goods in transit requiring specialist coverage.</div>
+        <div class="ins-for">Import/Export Businesses</div>
+      </div>
+    </div>
+    <div class="section-label" style="margin-bottom:32px;margin-top:60px">Corporate Insurance Solutions</div>
+    <div class="ins-grid fade-up">
+      <div class="ins-card">
+        <div class="ins-icon">👔</div>
+        <div class="ins-title">D&O Policy</div>
+        <div class="ins-desc">Directors and Officers Liability coverage — protecting decision-makers against personal financial exposure from business decisions and regulatory actions.</div>
+        <div class="ins-for">Boards & Senior Management</div>
+      </div>
+      <div class="ins-card">
+        <div class="ins-icon">👥</div>
+        <div class="ins-title">Group Health & Life</div>
+        <div class="ins-desc">Employee benefit programs — group health, group term life, and personal accident covers structured for cost efficiency and staff retention.</div>
+        <div class="ins-for">Corporates & SMEs</div>
+      </div>
+      <div class="ins-card">
+        <div class="ins-icon">🔒</div>
+        <div class="ins-title">Keyman Insurance</div>
+        <div class="ins-desc">Business continuity protection against the loss of a critical individual — ensuring the company survives the departure of its most valuable person.</div>
+        <div class="ins-for">Founders & Key Executives</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOANS -->
+<section class="svc-section" id="tab-loans" style="background:var(--off-white)">
+  <div class="svc-inner">
+    <div class="section-label">Capital Solutions</div>
+    <div class="svc-hero-grid">
+      <div>
+        <h2 class="svc-h2">Smart capital.<br><em>When you need it.</em></h2>
+        <div class="svc-lead">Access to the right capital at the right cost — structured through our authorised partnerships with India's leading banks and NBFCs.</div>
+      </div>
+      <div class="svc-body">
+        <p>Borrowing is not weakness. Strategic use of leverage is how sophisticated investors and business owners optimise their return on capital. A home loan at 8.5% against appreciating real estate, a business loan to fund a ₹5 Cr equipment investment — these are calculated decisions, not emergencies.</p>
+        <p>WPF Capital helps you access capital with institutional terms: the lowest available rates, the most appropriate tenure, and the most favourable structure — through our authorised channel partner status with Bank of Baroda, HDFC, ICICI, Axis, Citibank, RBL, and LIC.</p>
+        <div class="svc-pull">"The difference between a good loan and a bad one is the terms, the structure, and who negotiated them on your behalf."</div>
+      </div>
+    </div>
+    <div class="loans-grid fade-up">
+      <div class="loan-card">
+        <div class="lc-type">Home Loan</div>
+        <div class="lc-title">Purchase, Construction<br>& Renovation</div>
+        <div class="lc-rate">8.50<span style="font-size:24px">%</span></div>
+        <div class="lc-rate-label">Starting rate p.a.</div>
+        <div class="lc-desc">Home loans for primary residence, second home, and investment property — with balance transfer options and top-up facility for existing home loan customers.</div>
+        <div class="lc-banks"><span class="lc-bank">HDFC</span><span class="lc-bank">ICICI</span><span class="lc-bank">Bank of Baroda</span><span class="lc-bank">Axis</span><span class="lc-bank">LIC HFL</span></div>
+      </div>
+      <div class="loan-card">
+        <div class="lc-type">Loan Against Property</div>
+        <div class="lc-title">Unlock the value in<br>your real estate</div>
+        <div class="lc-rate">9.25<span style="font-size:24px">%</span></div>
+        <div class="lc-rate-label">Starting rate p.a.</div>
+        <div class="lc-desc">Mortgage-backed loans against residential or commercial property — for business expansion, personal needs, or investment opportunities. Up to 65% of property value.</div>
+        <div class="lc-banks"><span class="lc-bank">HDFC</span><span class="lc-bank">ICICI</span><span class="lc-bank">Axis</span><span class="lc-bank">RBL</span></div>
+      </div>
+      <div class="loan-card">
+        <div class="lc-type">Business Loan</div>
+        <div class="lc-title">Growth capital for<br>your enterprise</div>
+        <div class="lc-rate">11.00<span style="font-size:24px">%</span></div>
+        <div class="lc-rate-label">Starting rate p.a.</div>
+        <div class="lc-desc">Unsecured and secured business loans — term loans, working capital, CC/OD limits — for SMEs, established businesses, and entrepreneurs with growth plans.</div>
+        <div class="lc-banks"><span class="lc-bank">Bank of Baroda</span><span class="lc-bank">ICICI</span><span class="lc-bank">RBL</span><span class="lc-bank">Axis</span></div>
+      </div>
+      <div class="loan-card">
+        <div class="lc-type">Personal Loan</div>
+        <div class="lc-title">Immediate capital.<br>No collateral.</div>
+        <div class="lc-rate">10.50<span style="font-size:24px">%</span></div>
+        <div class="lc-rate-label">Starting rate p.a.</div>
+        <div class="lc-desc">Unsecured personal loans for immediate needs — education expenses, medical costs, travel, or personal investment opportunities — with fast processing and minimal documentation.</div>
+        <div class="lc-banks"><span class="lc-bank">ICICI</span><span class="lc-bank">Axis</span><span class="lc-bank">Citibank</span><span class="lc-bank">RBL</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="process-strip" style="margin-top:60px">
+    <div class="ps-inner">
+      <div class="ps-title">From application to disbursement — we guide every step.</div>
+      <div class="ps-steps">
+        <div class="ps-step"><div class="ps-dot">1</div><div class="ps-label">Eligibility Check</div></div>
+        <div class="ps-step"><div class="ps-dot">2</div><div class="ps-label">Bank Selection</div></div>
+        <div class="ps-step"><div class="ps-dot">3</div><div class="ps-label">Documentation</div></div>
+        <div class="ps-step"><div class="ps-dot">4</div><div class="ps-label">Application</div></div>
+        <div class="ps-step"><div class="ps-dot">5</div><div class="ps-label">Approval</div></div>
+        <div class="ps-step"><div class="ps-dot">6</div><div class="ps-label">Disbursement</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM -->
+<section class="svc-section" id="tab-platform" style="background:var(--navy)">
+  <div class="svc-inner">
+    <div class="section-label" style="color:var(--gold)">WPF Platform</div>
+    <div class="svc-hero-grid">
+      <div>
+        <h2 class="svc-h2" style="color:#fff">Your entire financial life.<br><em style="color:var(--gold-light)">In one place.</em></h2>
+        <div class="svc-lead" style="color:rgba(255,255,255,0.5)">The WPF Platform is your private financial command centre — real-time portfolio tracking, transaction management, and reporting, available 24/7.</div>
+      </div>
+      <div class="svc-body">
+        <p style="color:rgba(255,255,255,0.5)">Managing wealth across mutual funds, bonds, insurance policies, and loans — with paper statements, delayed NAV updates, and no unified view — is the default experience for most investors. The WPF Platform changes this.</p>
+        <p style="color:rgba(255,255,255,0.5)">Available on iOS and Android, the platform gives you a clean, real-time dashboard of your complete financial picture — investment value, insurance status, loan schedules, and portfolio analytics — in one authenticated environment.</p>
+        <div class="svc-pull" style="border-color:var(--gold);color:var(--gold-light)">"Manage your wealth with the same visibility you manage your business — complete, real-time, and always accessible."</div>
+      </div>
+    </div>
+    <div class="products-grid fade-up" style="margin-bottom:0">
+      <div class="product-card" style="background:rgba(255,255,255,0.06)">
+        <div class="pc-icon" style="color:rgba(201,168,76,0.3)">📊</div>
+        <div class="pc-title">Portfolio Dashboard</div>
+        <div class="pc-desc">Complete real-time view of all investments — NAV, unrealised gains, XIRR, and asset allocation across all fund houses.</div>
+      </div>
+      <div class="product-card" style="background:rgba(255,255,255,0.06)">
+        <div class="pc-icon" style="color:rgba(201,168,76,0.3)">⚡</div>
+        <div class="pc-title">Instant Transactions</div>
+        <div class="pc-desc">Paperless SIP setup, redemption, switch, and purchase — executed securely without visiting any office or filling physical forms.</div>
+      </div>
+      <div class="product-card" style="background:rgba(255,255,255,0.06)">
+        <div class="pc-icon" style="color:rgba(201,168,76,0.3)">📄</div>
+        <div class="pc-title">Smart Reports</div>
+        <div class="pc-desc">Valuation reports, capital gains statements, dividend history, goal tracking — all downloadable, always current.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-strip">
+  <div>
+    <div class="strip-eyebrow">Speak to a Partner</div>
+    <h2 class="strip-h2">Ready to build your<br><em>financial architecture?</em></h2>
+  </div>
+  <a href="#" class="btn-gold">Request a Private Consultation</a>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">WPF Capital</div>
+      <div class="footer-brand-sub">Private Wealth & Advisory</div>
+      <p class="footer-about">Founded in 2016, WPF Capital is Delhi-NCR's trusted private wealth advisory firm — investment advisory, insurance, and capital solutions.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Services</div>
+      <a href="#">Investment Advisory</a>
+      <a href="#">Protection & Insurance</a>
+      <a href="#">Capital Solutions</a>
+      <a href="#">WPF Platform</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Firm</div>
+      <a href="#">Philosophy</a>
+      <a href="#">Leadership</a>
+      <a href="#">WPF Perspective</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Offices</div>
+      <p>Janak Puri, New Delhi</p>
+      <p>M3M Market, Gurugram</p>
+      <p>Sector-8, Rohini, Delhi</p>
+      <p style="margin-top:12px;color:var(--gold)">+91 99107 09583</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-legal">© 2026 WPF Capital. All rights reserved.</div>
+    <div class="footer-sebi">SEBI Registered · AMFI Registered Mutual Fund Distributor</div>
+  </div>
+</footer>
+
+<script>
+const tabs = document.querySelectorAll('.svc-tab');
+const sections = document.querySelectorAll('.svc-section');
+tabs.forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    sections.forEach(s=>s.classList.remove('active'));
+    tab.classList.add('active');
+    const target = document.getElementById('tab-'+tab.dataset.tab);
+    if(target){ target.classList.add('active'); window.scrollTo({top:200,behavior:'smooth'}); }
+  });
+});
+const obs = new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:0.1});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
